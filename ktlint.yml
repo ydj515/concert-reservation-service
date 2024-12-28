@@ -1,0 +1,3 @@
+ktlint:
+  disabled_rules:
+    - function-name

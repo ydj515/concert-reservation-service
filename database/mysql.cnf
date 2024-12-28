@@ -1,0 +1,13 @@
+[mysqld]
+# 외부 접속 허용
+bind-address = 0.0.0.0
+
+# UTF-8MB4 설정
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+[client]
+default-character-set = utf8mb4
+
+[mysql]
+default-character-set = utf8mb4
