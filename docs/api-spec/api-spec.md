@@ -194,6 +194,304 @@ Content-Type: application/json
 }
 ```
 
+## 콘서트 목록 조회 API
+
+### 기본정보
+
+| 메서드 | endpoint     |
+|-----|--------------|
+| GET | /api/concert |
+
+### 요청
+
+#### 헤더
+
+| 이름           | 설명               | 필수 |
+|--------------|------------------|----|
+| Content-Type | application/json | O  |
+| USER-TOKEN   | Bearer 토큰 인증     | O  |
+
+### 응답
+
+#### 본문
+
+| 이름        | 타입      | 설명      | 필수 |
+|-----------|---------|---------|----|
+| success   | boolean | 응답성공여부  |    |
+| code      | string  | 응답코드    | O  |
+| message   | string  | 응답코드메시지 | O  |
+| timestamp | string  | 응답일시    | O  |
+| data      | json    | 응답데이터   | O  |
+| concertId | Long    | 콘서트 ID  | O  |
+| title     | String  | 콘서트 제목  | O  |
+
+#### 요청
+
+```bash
+curl --location --request GET 'localhost:8080/api/concerts' \
+--header 'USER-TOKEN: Bearer valid-token-1'
+```
+
+#### 응답: 성공
+
+```http request
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "success": true,
+  "code": "SUCCESS_01",
+  "message": "Success",
+  "timestamp": "2025-01-03T10:15:00.000Z",
+  "data": [
+    {
+      "concertId": 1,
+      "title": "A 콘서트"
+    },
+    {
+      "concertId": 2,
+      "title": "B 콘서트"
+    }
+  ]
+}
+```
+
+#### 응답: 실패
+
+- 유효하지 않은 USER-TOKEN
+
+```http request
+HTTP/1.1 400 Bad request
+Content-Type: application/json
+
+{
+    "code": "FAIL_01",
+    "message": "Request is invalid",
+    "timestamp": "2024-12-31T01:45:40.667Z",
+    "data": "Invalid or missing USER-TOKEN header"
+}
+```
+
+## 특정 콘서트 조회 API
+
+### 기본정보
+
+| 메서드 | endpoint                 |
+|-----|--------------------------|
+| GET | /api/concert/{concertId} |
+
+### 요청
+
+#### 헤더
+
+| 이름           | 설명               | 필수 |
+|--------------|------------------|----|
+| Content-Type | application/json | O  |
+| USER-TOKEN   | Bearer 토큰 인증     | O  |
+
+#### 경로 변수
+
+| 이름        | 타입     | 설명    | 필수 |
+|-----------|--------|-------|----|
+| concertId | number | 콘서트ID | O  |
+
+### 응답
+
+#### 본문
+
+| 이름        | 타입      | 설명      | 필수 |
+|-----------|---------|---------|----|
+| success   | boolean | 응답성공여부  |    |
+| code      | string  | 응답코드    | O  |
+| message   | string  | 응답코드메시지 | O  |
+| timestamp | string  | 응답일시    | O  |
+| data      | json    | 응답데이터   | O  |
+| concertId | Long    | 콘서트 ID  | O  |
+| title     | String  | 콘서트 제목  | O  |
+
+### 예제
+
+#### 요청
+
+```bash
+curl --location --request GET 'localhost:8080/api/concerts/1' \
+--header 'USER-TOKEN: Bearer valid-token-1'
+```
+
+#### 응답: 성공
+
+```http request
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "success": true,
+  "code": "SUCCESS_01",
+  "message": "Success",
+  "timestamp": "2025-01-03T10:15:00.000Z",
+  "data": {
+    "concertId": 1,
+    "title": "A 콘서트"
+  }
+}
+```
+
+#### 응답: 실패
+
+- 유효하지 않은 USER-TOKEN
+
+```http request
+HTTP/1.1 400 Bad request
+Content-Type: application/json
+
+{
+    "code": "FAIL_01",
+    "message": "Request is invalid",
+    "timestamp": "2024-12-31T01:45:40.667Z",
+    "data": "Invalid or missing USER-TOKEN header"
+}
+```
+
+#### 응답: 실패
+
+- 존재하지 않는 concertId
+
+```http request
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{
+  "success": false,
+  "code": "CONCERT_ERROR_01",
+  "message": "Concert not found",
+  "data": "Concert not found"
+}
+```
+
+## 콘서트 스케줄 조회 API
+
+### 기본정보
+
+| 메서드 | endpoint                           |
+|-----|------------------------------------|
+| GET | /api/concert/{concertId}/schedules |
+
+### 요청
+
+#### 헤더
+
+| 이름           | 설명               | 필수 |
+|--------------|------------------|----|
+| Content-Type | application/json | O  |
+| USER-TOKEN   | Bearer 토큰 인증     | O  |
+
+#### 경로 변수
+
+| 이름        | 타입     | 설명    | 필수 |
+|-----------|--------|-------|----|
+| concertId | number | 콘서트ID | O  |
+
+### 응답
+
+#### 본문
+
+| 이름                       | 타입      | 설명          | 필수 |
+|--------------------------|---------|-------------|----|
+| success                  | boolean | 응답성공여부      |    |
+| code                     | string  | 응답코드        | O  |
+| message                  | string  | 응답코드메시지     | O  |
+| timestamp                | string  | 응답일시        | O  |
+| data                     | json    | 응답데이터       | O  |
+| concertId                | Long    | 콘서트 아이디     | O  |
+| title                    | String  | 콘서트 제목      | O  |
+| schedules                | 배열      | 콘서트 스케줄 리스트 | O  |
+| └─ scheduleId            | Long    | 스케줄 아이디     | O  |
+| └─ performanceDate       | String  | 공연 날짜       | O  |
+| └─ startTime             | String  | 공연 시작 시간    | O  |
+| └─ endTime               | String  | 공연 종료 시간    | O  |
+| └─ place                 | json    | 장소 정보       | O  |
+| └─ └─ name               | String  | 장소명         | O  |
+| └─ └─ availableSeatCount | int     | 남은 좌석 수     | O  |
+
+### 예제
+
+#### 요청
+
+```bash
+curl --location --request GET 'localhost:8080/api/concert/1/schedules' \
+--header 'USER-TOKEN: Bearer valid-token-1'
+```
+
+#### 응답: 성공
+
+```http request
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "success": true,
+  "code": "SUCCESS_01",
+  "message": "Success",
+  "timestamp": "2025-01-03T10:15:00.000Z",
+  "data": {
+    "concertId": 1,
+    "title": "A 콘서트",
+    "schedules": [
+      {
+        "scheduleId": 101,
+        "performanceDate": "2025-01-01",
+        "startTime": "18:00",
+        "endTime": "20:00",
+        "place": {
+          "name": "LG아트센터",
+          "availableSeatCount": 500
+        }
+      },
+      {
+        "scheduleId": 102,
+        "performanceDate": "2025-01-02",
+        "startTime": "19:00",
+        "endTime": "21:00",
+        "place": {
+          "name": "우리금융아트홀",
+          "availableSeatCount": 450
+        }
+      }
+    ]
+  }
+}
+```
+
+#### 응답: 실패
+
+- 유효하지 않은 USER-TOKEN
+
+```http request
+HTTP/1.1 400 Bad request
+Content-Type: application/json
+
+{
+    "code": "FAIL_01",
+    "message": "Request is invalid",
+    "timestamp": "2024-12-31T01:45:40.667Z",
+    "data": "Invalid or missing USER-TOKEN header"
+}
+```
+
+- 존재하지 않는 concertId
+
+```http request
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{
+  "success": false,
+  "code": "CONCERT_NOT_FOUND",
+  "message": "Concert not found",
+  "data": null
+}
+```
+
 ## 예약 가능 날짜/좌석 조회 API
 
 ### 기본정보
