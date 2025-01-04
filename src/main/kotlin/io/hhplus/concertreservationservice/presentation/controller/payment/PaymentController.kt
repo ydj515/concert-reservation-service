@@ -1,5 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.payment
 
+import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.response.ApiResponse
 import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
@@ -31,7 +32,7 @@ class PaymentController {
     // 	•	요청: { "reservationId": -1 }
     @PostMapping("")
     fun makePayment(
-        @RequestHeader("USER-TOKEN") userToken: String?,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
         @RequestBody paymentRequest: PaymentRequest?,
     ): ResponseEntity<*> {
         return try {

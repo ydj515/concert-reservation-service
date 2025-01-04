@@ -1,6 +1,7 @@
 [mysqld]
 # 외부 접속 허용
 bind-address = 0.0.0.0
+default-time-zone = '+09:00'
 
 # UTF-8MB4 설정
 character-set-server = utf8mb4
