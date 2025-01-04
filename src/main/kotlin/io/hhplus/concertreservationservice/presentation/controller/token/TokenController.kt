@@ -1,5 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.token
 
+import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.response.ApiResponse
 import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
@@ -101,7 +102,7 @@ class TokenController {
     // 	•	헤더: USER-TOKEN: Bearer12345
     @GetMapping("")
     fun getQueueTokenStatus(
-        @RequestHeader("USER-TOKEN") token: String?,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String?,
     ): ResponseEntity<*> {
         return try {
             if (token.isNullOrBlank() || !token.startsWith("Bearer ")) {

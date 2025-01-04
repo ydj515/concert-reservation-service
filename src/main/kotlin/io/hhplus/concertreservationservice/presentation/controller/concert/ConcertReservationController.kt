@@ -1,5 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.concert
 
+import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.response.ApiResponse
 import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
@@ -49,7 +50,7 @@ class ConcertReservationController {
         @PathVariable scheduleId: Long,
         @PathVariable reservationId: Long,
         @RequestBody reservationRequest: ReservationRequest,
-        @RequestHeader("USER-TOKEN") userToken: String,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String,
     ): ResponseEntity<*> {
         return try {
             if (userToken.isNullOrBlank() || userToken !in validTokens) {

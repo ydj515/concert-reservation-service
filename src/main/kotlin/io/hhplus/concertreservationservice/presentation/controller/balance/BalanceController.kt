@@ -1,5 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.balance
 
+import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.response.ApiResponse
 import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
@@ -35,7 +36,7 @@ class BalanceController {
     // 	•	응답: 400 Bad Request, “Invalid balance request data”.
     @PostMapping("")
     fun chargeBalance(
-        @RequestHeader("USER-TOKEN") userToken: String?,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
         @RequestBody balanceRequest: BalanceChargeRequest?,
     ): ResponseEntity<*> {
         return try {
@@ -87,7 +88,7 @@ class BalanceController {
     // 	•	응답: 400 Bad Request, “Invalid or missing USER-TOKEN header”.
     @GetMapping("")
     fun getBalance(
-        @RequestHeader("USER-TOKEN") userToken: String?,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
     ): ResponseEntity<*> {
         return try {
             if (userToken.isNullOrBlank() || !userBalances.containsKey(userToken)) {

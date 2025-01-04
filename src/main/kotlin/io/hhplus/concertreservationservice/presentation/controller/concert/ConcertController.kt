@@ -1,5 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.concert
 
+import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.response.ApiResponse
 import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
@@ -101,7 +102,7 @@ class ConcertController {
     // 	• 응답: 400 Bad Request, "Invalid or missing USER-TOKEN header".
     @GetMapping("")
     fun getConcerts(
-        @RequestHeader("USER-TOKEN") userToken: String?,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
     ): ResponseEntity<*> {
         return try {
             if (userToken.isNullOrBlank() || userToken !in validTokens) {
@@ -142,7 +143,7 @@ class ConcertController {
     //  • 응답: 404 Not Found
     @GetMapping("/{concertId}")
     fun getConcertById(
-        @RequestHeader("USER-TOKEN") userToken: String?,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
         @PathVariable concertId: Long,
     ): ResponseEntity<*> {
         return try {
@@ -202,7 +203,7 @@ class ConcertController {
      */
     @GetMapping("/{concertId}/schedules")
     fun getConcertSchedules(
-        @RequestHeader("USER-TOKEN") userToken: String?,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
         @PathVariable concertId: Long,
     ): ResponseEntity<*> {
         return try {
@@ -272,7 +273,7 @@ class ConcertController {
         @PathVariable concertId: Long,
         @PathVariable scheduleId: Long,
         @RequestParam date: String,
-        @RequestHeader("USER-TOKEN") userToken: String?,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
     ): ResponseEntity<*> {
         return try {
             if (userToken.isNullOrBlank() || userToken !in validTokens) {
