@@ -108,7 +108,7 @@ src/
 │   │       │       ├── jpa/         <-- JPA Repository
 │   │       │       │   └── XXXJpaRepository  <-- JpaRepository 상속받은 Repository Interface
 │   │       │       └── xxxRepositoryImpl/... <-- Repository 구현체
-│   │       └── interfaces/          <-- API 관련
+│   │       └── presentation/          <-- API 관련
 │   │           ├── advice/          <-- Controller Advice
 │   │           │   └── GlobalExceptionHandler  <-- Global Exception Handler
 │   │           └── controller/      <-- Controller

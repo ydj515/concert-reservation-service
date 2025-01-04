@@ -1,7 +1,7 @@
-package io.hhplus.concertreservationservice.interfaces.controller.concert
+package io.hhplus.concertreservationservice.presentation.controller.concert
 
-import io.hhplus.concertreservationservice.interfaces.response.ApiResponse
-import io.hhplus.concertreservationservice.interfaces.response.ErrorResponse
+import io.hhplus.concertreservationservice.presentation.response.ApiResponse
+import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
