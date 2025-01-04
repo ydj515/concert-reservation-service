@@ -116,3 +116,9 @@ src/
 │       ├── application.yml          <-- 애플리케이션 설정 파일
 │       └── ...
 ```
+
+[ktlint]: https://github.com/JLLeitschuh/ktlint-gradle?tab=readme-ov-file#configuration
+
+[kotest]: https://kotest.io/docs/quickstart
+
+[mockk]: https://mockk.io/
