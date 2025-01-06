@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.presentation.controller.payment
 
+import io.hhplus.concertreservationservice.common.response.ErrorResponse
+import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
-import io.hhplus.concertreservationservice.presentation.response.ApiResponse
-import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -47,7 +47,7 @@ class PaymentController {
                 when {
                     userToken == "Bearer valid-token-1" && paymentRequest.reservationId == 100L -> {
                         val paymentResultResponse = PaymentResultResponse(status = "SUCCESS")
-                        ApiResponse(
+                        SuccessResponse(
                             success = true,
                             code = "SUCCESS_01",
                             message = "Success",
