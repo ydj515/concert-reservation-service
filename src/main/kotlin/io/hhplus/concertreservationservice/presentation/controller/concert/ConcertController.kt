@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.presentation.controller.concert
 
+import io.hhplus.concertreservationservice.common.response.ErrorResponse
+import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
-import io.hhplus.concertreservationservice.presentation.response.ApiResponse
-import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -110,7 +110,7 @@ class ConcertController {
             }
             val response =
                 ResponseEntity.ok(
-                    ApiResponse(
+                    SuccessResponse(
                         success = true,
                         code = "SUCCESS_01",
                         message = "Success",
@@ -157,7 +157,7 @@ class ConcertController {
             }
 
             ResponseEntity.ok(
-                ApiResponse(
+                SuccessResponse(
                     success = true,
                     code = "SUCCESS_01",
                     message = "Success",
@@ -166,7 +166,7 @@ class ConcertController {
             )
         } catch (ex: IllegalArgumentException) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ApiResponse(
+                SuccessResponse(
                     success = false,
                     code = "INVALID_TOKEN",
                     message = ex.message ?: "Invalid request",
@@ -216,7 +216,7 @@ class ConcertController {
             val concertResponse =
                 concertSchedules.find { it.concertId == concertId }
                     ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        ApiResponse(
+                        SuccessResponse(
                             success = false,
                             code = "CONCERT_NOT_FOUND",
                             message = "Concert not found",
@@ -226,7 +226,7 @@ class ConcertController {
 
             // 성공 응답
             ResponseEntity.ok(
-                ApiResponse(
+                SuccessResponse(
                     success = true,
                     code = "SUCCESS_01",
                     message = "Success",
@@ -235,7 +235,7 @@ class ConcertController {
             )
         } catch (ex: IllegalArgumentException) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ApiResponse(
+                SuccessResponse(
                     success = false,
                     code = "INVALID_TOKEN",
                     message = ex.message ?: "Invalid request",
@@ -244,7 +244,7 @@ class ConcertController {
             )
         } catch (ex: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ApiResponse(
+                SuccessResponse(
                     success = false,
                     code = "SERVER_ERROR",
                     message = "An unexpected error occurred",
@@ -286,7 +286,7 @@ class ConcertController {
 
             val seatInfo = SeatInfoResponse(available = seats.isNotEmpty(), seats = seats)
             val response =
-                ApiResponse(
+                SuccessResponse(
                     success = true,
                     code = "SUCCESS_01",
                     message = "Success",

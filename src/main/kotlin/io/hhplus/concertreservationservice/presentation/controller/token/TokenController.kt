@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.presentation.controller.token
 
+import io.hhplus.concertreservationservice.common.response.ErrorResponse
+import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
-import io.hhplus.concertreservationservice.presentation.response.ApiResponse
-import io.hhplus.concertreservationservice.presentation.response.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,7 +39,7 @@ class TokenController {
                 when (request.userId) {
                     "1" -> {
                         val queueTokenResponse = QueueTokenResponse(queueToken = "active-token")
-                        ApiResponse(
+                        SuccessResponse(
                             success = true,
                             code = "SUCCESS_01",
                             message = "Success",
@@ -49,7 +49,7 @@ class TokenController {
 
                     "2" -> {
                         val queueTokenResponse = QueueTokenResponse(queueToken = "waiting-token")
-                        ApiResponse(
+                        SuccessResponse(
                             success = true,
                             code = "SUCCESS_01",
                             message = "Success",
@@ -113,7 +113,7 @@ class TokenController {
                 when (token) {
                     "Bearer valid-token-1" -> {
                         val queueInfo = QueueTokenStatusResponse(status = "ACTIVE")
-                        ApiResponse(
+                        SuccessResponse(
                             success = true,
                             code = "SUCCESS_01",
                             message = "Success",
@@ -123,7 +123,7 @@ class TokenController {
 
                     "Bearer valid-token-2" -> {
                         val queueInfo = QueueTokenStatusResponse(status = "WAITING")
-                        ApiResponse(
+                        SuccessResponse(
                             success = true,
                             code = "SUCCESS_01",
                             message = "Success",
