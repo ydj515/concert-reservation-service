@@ -53,22 +53,22 @@ Content-Type: application/json
 
 # Case 1: active 토큰 조회 성공
 GET {{host}}/api/queue-token
-USER-TOKEN: Bearer valid-token-1
+X-Reservation-Queue-Token: Bearer valid-token-1
 
 ###
 
 # Case 2: waiting 토큰 조회 성공
 GET {{host}}/api/queue-token
-USER-TOKEN: Bearer valid-token-2
+X-Reservation-Queue-Token: Bearer valid-token-2
 
 ###
 
 # Case 3: 만료된 토큰
 GET {{host}}/api/queue-token
-USER-TOKEN: Bearer expired-token-1
+X-Reservation-Queue-Token: Bearer expired-token-1
 
 ###
 
 # Case 4: 토큰 형식에 어긋남
 GET {{host}}/api/queue-token
-USER-TOKEN: Bearer12345
+X-Reservation-Queue-Token: Bearer12345

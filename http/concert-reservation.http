@@ -3,7 +3,7 @@
 # Case 1: 정상 응답
 POST {{host}}/api/concert/1/schedules/101/reservations/1
 Content-Type: application/json
-USER-TOKEN: Bearer valid-token-1
+X-Reservation-Queue-Token: Bearer valid-token-1
 
 {
   "reservationId": 1,
@@ -15,7 +15,7 @@ USER-TOKEN: Bearer valid-token-1
 # Case 2: 유효하지 않은 USER-TOKEN
 POST {{host}}/api/concert/1/schedules/101/reservations/1
 Content-Type: application/json
-USER-TOKEN: invalid-token
+X-Reservation-Queue-Token: invalid-token
 
 {
   "reservationId": 1,
@@ -27,7 +27,7 @@ USER-TOKEN: invalid-token
 # Case 3: 유효하지 않은 concertId 또는 scheduleId
 POST {{host}}/api/concert/999/schedules/888/reservations/1
 Content-Type: application/json
-USER-TOKEN: Bearer valid-token-1
+X-Reservation-Queue-Token: Bearer valid-token-1
 
 {
   "reservationId": 1,
@@ -39,7 +39,7 @@ USER-TOKEN: Bearer valid-token-1
 # Case 4: 유효하지 않은 좌석 번호 (50 이상의 수)
 POST {{host}}/api/concert/1/schedules/101/reservations/51
 Content-Type: application/json
-USER-TOKEN: Bearer valid-token-1
+X-Reservation-Queue-Token: Bearer valid-token-1
 
 {
   "reservationId": 51,

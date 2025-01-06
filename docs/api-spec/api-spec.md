@@ -123,7 +123,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 ### 응답
 
@@ -144,7 +144,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request GET 'localhost:8080/api/queue-token' \
---header 'USER-TOKEN: Bearer ${USER_TOKEN}'
+--header 'X-Reservation-Queue-Token: Bearer ${USER_TOKEN}'
 ```
 
 #### 응답: 성공
@@ -209,7 +209,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 ### 응답
 
@@ -229,7 +229,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request GET 'localhost:8080/api/concerts' \
---header 'USER-TOKEN: Bearer valid-token-1'
+--header 'X-Reservation-Queue-Token: Bearer valid-token-1'
 ```
 
 #### 응답: 성공
@@ -258,7 +258,7 @@ Content-Type: application/json
 
 #### 응답: 실패
 
-- 유효하지 않은 USER-TOKEN
+- 유효하지 않은 X-Reservation-Queue-Token
 
 ```http request
 HTTP/1.1 400 Bad request
@@ -268,7 +268,7 @@ Content-Type: application/json
     "code": "FAIL_01",
     "message": "Request is invalid",
     "timestamp": "2024-12-31T01:45:40.667Z",
-    "data": "Invalid or missing USER-TOKEN header"
+    "data": "Invalid or missing X-Reservation-Queue-Token header"
 }
 ```
 
@@ -287,7 +287,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 #### 경로 변수
 
@@ -315,7 +315,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request GET 'localhost:8080/api/concerts/1' \
---header 'USER-TOKEN: Bearer valid-token-1'
+--header 'X-Reservation-Queue-Token: Bearer valid-token-1'
 ```
 
 #### 응답: 성공
@@ -338,7 +338,7 @@ Content-Type: application/json
 
 #### 응답: 실패
 
-- 유효하지 않은 USER-TOKEN
+- 유효하지 않은 X-Reservation-Queue-Token
 
 ```http request
 HTTP/1.1 400 Bad request
@@ -348,7 +348,7 @@ Content-Type: application/json
     "code": "FAIL_01",
     "message": "Request is invalid",
     "timestamp": "2024-12-31T01:45:40.667Z",
-    "data": "Invalid or missing USER-TOKEN header"
+    "data": "Invalid or missing X-Reservation-Queue-Token header"
 }
 ```
 
@@ -383,7 +383,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 #### 경로 변수
 
@@ -419,7 +419,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request GET 'localhost:8080/api/concert/1/schedules' \
---header 'USER-TOKEN: Bearer valid-token-1'
+--header 'X-Reservation-Queue-Token: Bearer valid-token-1'
 ```
 
 #### 응답: 성공
@@ -464,7 +464,7 @@ Content-Type: application/json
 
 #### 응답: 실패
 
-- 유효하지 않은 USER-TOKEN
+- 유효하지 않은 X-Reservation-Queue-Token
 
 ```http request
 HTTP/1.1 400 Bad request
@@ -474,7 +474,7 @@ Content-Type: application/json
     "code": "FAIL_01",
     "message": "Request is invalid",
     "timestamp": "2024-12-31T01:45:40.667Z",
-    "data": "Invalid or missing USER-TOKEN header"
+    "data": "Invalid or missing X-Reservation-Queue-Token header"
 }
 ```
 
@@ -507,7 +507,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 #### 경로 변수
 
@@ -542,7 +542,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request GET 'localhost:8080/api/concert/{concertId}/schedules/{scheduleId}/seats?date={date}' \
---header 'USER-TOKEN: ${USER_TOKEN}' \
+--header 'X-Reservation-Queue-Token: ${USER_TOKEN}' \
 --data ''
 ```
 
@@ -566,7 +566,7 @@ Content-Type: application/json
 
 #### 응답: 실패
 
-- 유효하지 않은 USER-TOKEN
+- 유효하지 않은 X-Reservation-Queue-Token
 
 ```http request
 HTTP/1.1 400 Bad request
@@ -576,7 +576,7 @@ Content-Type: application/json
     "code": "FAIL_01",
     "message": "Request is invalid",
     "timestamp": "2024-12-31T01:45:40.667Z",
-    "data": "Invalid or missing USER-TOKEN header"
+    "data": "Invalid or missing X-Reservation-Queue-Token header"
 }
 ```
 
@@ -623,7 +623,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 #### 경로 변수
 
@@ -659,7 +659,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request POST 'localhost:8080/api/concert/{concertId}/schedules/{scheduleId}/reservations/{reservationId}' \
---header 'USER-TOKEN: Bearer ${USER_TOKEN}' \
+--header 'X-Reservation-Queue-Token: Bearer ${USER_TOKEN}' \
 --header 'Content-Type: application/json' \
 --data '{
     "seatNo": ${seatNo}
@@ -686,7 +686,7 @@ Content-Type: application/json
 
 #### 응답: 실패
 
-- 유효하지 않은 USER-TOKEN
+- 유효하지 않은 X-Reservation-Queue-Token
 
 ```http request
 HTTP/1.1 400 Bad request
@@ -696,7 +696,7 @@ Content-Type: application/json
     "code": "FAIL_01",
     "message": "Request is invalid",
     "timestamp": "2024-12-31T01:45:40.667Z",
-    "data": "Invalid or missing USER-TOKEN header"
+    "data": "Invalid or missing X-Reservation-Queue-Token header"
 }
 ```
 
@@ -755,7 +755,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 #### 본문
 
@@ -782,7 +782,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request POST 'localhost:8080/api/balance' \
---header 'USER-TOKEN: ${USER_TOKEN}' \
+--header 'X-Reservation-Queue-Token: ${USER_TOKEN}' \
 --header 'Content-Type: application/json' \
 --data '{
     "amount": ${amount}
@@ -808,7 +808,7 @@ Content-Type: application/json
 
 #### 응답: 실패
 
-- 유효하지 않은 USER-TOKEN
+- 유효하지 않은 X-Reservation-Queue-Token
 
 ```http request
 HTTP/1.1 400 Bad request
@@ -818,7 +818,7 @@ Content-Type: application/json
     "code": "FAIL_01",
     "message": "Request is invalid",
     "timestamp": "2024-12-31T01:45:40.667Z",
-    "data": "Invalid or missing USER-TOKEN header"
+    "data": "Invalid or missing X-Reservation-Queue-Token header"
 }
 ```
 
@@ -865,7 +865,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 ### 응답
 
@@ -886,7 +886,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request GET 'localhost:8080/api/balance' \
---header 'USER-TOKEN: ${USER_TOKEN}' \
+--header 'X-Reservation-Queue-Token: ${USER_TOKEN}' \
 --data ''
 ```
 
@@ -909,7 +909,7 @@ Content-Type: application/json
 
 #### 응답: 실패
 
-- 유효하지 않은 USER-TOKEN
+- 유효하지 않은 X-Reservation-Queue-Token
 
 ```http request
 HTTP/1.1 400 Bad request
@@ -919,7 +919,7 @@ Content-Type: application/json
     "code": "FAIL_01",
     "message": "Request is invalid",
     "timestamp": "2024-12-31T01:45:40.667Z",
-    "data": "Invalid or missing USER-TOKEN header"
+    "data": "Invalid or missing X-Reservation-Queue-Token header"
 }
 ```
 
@@ -952,7 +952,7 @@ Content-Type: application/json
 | 이름           | 설명               | 필수 |
 |--------------|------------------|----|
 | Content-Type | application/json | O  |
-| USER-TOKEN   | Bearer 토큰 인증     | O  |
+| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
 
 #### 본문
 
@@ -979,7 +979,7 @@ Content-Type: application/json
 
 ```bash
 curl --location --request POST 'localhost:8080/api/payment' \
---header 'USER-TOKEN: Bearer ${USER_TOKEN}' \
+--header 'X-Reservation-Queue-Token: Bearer ${USER_TOKEN}' \
 --header 'Content-Type: application/json' \
 --data '{
     "reservationId": ${reservationId}

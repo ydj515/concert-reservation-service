@@ -4,8 +4,8 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -123.7314,
-    "scrollLeft": -9,
+    "scrollTop": -205.7314,
+    "scrollLeft": -17,
     "zoomLevel": 0.72,
     "show": 431,
     "database": 4,
@@ -246,7 +246,7 @@
       },
       "eX3RGPkwiwyIMIFEFbPvQ": {
         "id": "eX3RGPkwiwyIMIFEFbPvQ",
-        "name": "user_token",
+        "name": "user_reservation_token",
         "comment": "사용자 대기열 토큰(사용자가 여러개의 토큰가지고 있을 수 있음)",
         "columnIds": [
           "2cK8PKZtMXrueaCG40iba",
@@ -266,12 +266,12 @@
           "x": 275,
           "y": 838,
           "zIndex": 201,
-          "widthName": 65,
+          "widthName": 135,
           "widthComment": 305,
           "color": ""
         },
         "meta": {
-          "updateAt": 1735729941501,
+          "updateAt": 1736102709147,
           "createAt": 1735547392099
         }
       },
@@ -502,7 +502,7 @@
         "id": "83GrwRo9B0zA3xcoUabXv",
         "tableId": "09R6u5FIdUddEEKiTXvT2",
         "name": "name",
-        "comment": "공연장명",
+        "comment": "공연장소 명",
         "dataType": "VARCHAR",
         "default": "",
         "options": 0,
@@ -514,7 +514,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1735543939266,
+          "updateAt": 1736102735174,
           "createAt": 1735543897694
         }
       },
@@ -622,19 +622,19 @@
         "id": "V5a094N_llU7iUpCUqTbY",
         "tableId": "zLGD5BTDedatrblhR4iFo",
         "name": "reserved_at",
-        "comment": "좌석 예약일",
+        "comment": "좌석 예약일시",
         "dataType": "DATETIME",
         "default": "",
         "options": 0,
         "ui": {
           "keys": 0,
           "widthName": 69,
-          "widthComment": 60,
+          "widthComment": 68,
           "widthDataType": 61,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1735544587948,
+          "updateAt": 1736104967894,
           "createAt": 1735544560563
         }
       },
@@ -822,7 +822,7 @@
         "id": "TiNoBbssnen-3lFyI7kdP",
         "tableId": "qS8-qRphUzm0NbsTwEXga",
         "name": "performance_date",
-        "comment": "공연시작일",
+        "comment": "공연일정",
         "dataType": "DATE",
         "default": "",
         "options": 0,
@@ -834,7 +834,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1736000619924,
+          "updateAt": 1736102743215,
           "createAt": 1735546420136
         }
       },
@@ -1201,20 +1201,20 @@
       "CTGCtYYN0V80qkraBoHcH": {
         "id": "CTGCtYYN0V80qkraBoHcH",
         "tableId": "zLGD5BTDedatrblhR4iFo",
-        "name": "reservation_time",
-        "comment": "결제전 예약 임시 만료시간",
+        "name": "reservation_expired_at",
+        "comment": "결제전 좌석예약 임시 만료일시",
         "dataType": "",
         "default": "",
         "options": 0,
         "ui": {
           "keys": 0,
-          "widthName": 97,
-          "widthComment": 126,
+          "widthName": 132,
+          "widthComment": 147,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1735550026532,
+          "updateAt": 1736104961956,
           "createAt": 1735549951204
         }
       },
@@ -1435,7 +1435,7 @@
           "columnIds": [
             "VGuXQPABM2WnUeO-XX20O"
           ],
-          "x": 999.5,
+          "x": 1018.5,
           "y": 630,
           "direction": 8
         },
@@ -1603,7 +1603,7 @@
           "columnIds": [
             "E8ETVuqdTIoS8KlSRSFQi"
           ],
-          "x": 1243,
+          "x": 1281,
           "y": 518,
           "direction": 2
         },
@@ -1743,7 +1743,7 @@
       {
         "name": 1735543936696,
         "dataType": 1735543939264,
-        "comment": 1735543929322
+        "comment": 1736102735173
       }
     ],
     "ZX7cojYfZkDgSTwugS-YJ": [
@@ -1829,7 +1829,7 @@
       {
         "name": 1735544576764,
         "dataType": 1735544579187,
-        "comment": 1735544587948
+        "comment": 1736104967893
       }
     ],
     "_wlijFpv3BT6g17jlcQU_": [
@@ -1956,7 +1956,7 @@
       {
         "name": 1735546447067,
         "dataType": 1735546450154,
-        "comment": 1736000619923
+        "comment": 1736102743214
       }
     ],
     "eX3RGPkwiwyIMIFEFbPvQ": [
@@ -1964,7 +1964,7 @@
       1735547392096,
       -1,
       {
-        "name": 1735547399818,
+        "name": 1736102709146,
         "comment": 1735550183580
       }
     ],
@@ -2175,8 +2175,8 @@
       1735549951203,
       -1,
       {
-        "name": 1735550015757,
-        "comment": 1735550026531
+        "name": 1736104949531,
+        "comment": 1736104961955
       }
     ],
     "zah-kpmSLVkm6mC3fy7TA": [
