@@ -1,9 +1,17 @@
 package io.hhplus.concertreservationservice.presentation.controller.token
 
-import io.hhplus.concertreservationservice.common.response.ErrorResponse
+import io.hhplus.concertreservationservice.application.facade.token.TokenFacade
+import io.hhplus.concertreservationservice.application.facade.token.request.CreateReservationTokenCriteria
+import io.hhplus.concertreservationservice.application.facade.token.request.ReservationTokenStatusCriteria
+import io.hhplus.concertreservationservice.application.facade.token.response.toReservationTokenCreateResponse
+import io.hhplus.concertreservationservice.application.facade.token.response.toReservationTokenStatusResponse
+import io.hhplus.concertreservationservice.common.response.ApiResponse
 import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
-import org.springframework.http.HttpStatus
+import io.hhplus.concertreservationservice.presentation.controller.token.request.ReservationTokenCreateRequest
+import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenCreateResponse
+import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenStatusResponse
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,159 +21,53 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/queue-token")
-class TokenController {
-    // 유저 토큰 발급 API
-    // 1.	waiting 토큰 발급 성공:
-    // 	•	요청: { "userId": "1" }
-    // 2.	active 토큰 발급 성공:
-    // 	•	요청: { "userId": "2" }
-    // 3.	토큰 발급 실패:
-    // 	•	요청: { "userId": "3" }
-    // 4.	user invalid:
-    // 	•	요청: { "userId": "4" }
-    // 5.	user token issued fail:
-    // 	•	요청: { "userId": "4" }
+@RequestMapping("/reservation-token")
+class TokenController(
+    private val tokenFacade: TokenFacade,
+) {
+    @Operation(
+        summary = "토큰 발급",
+        description = "reservation 토큰을 발급합니다.",
+        responses = [
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "200",
+                description = "토큰 발급 성공",
+            ),
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "400",
+                description = "잘못된 요청",
+            ),
+        ],
+    )
     @PostMapping("")
-    fun createQueueToken(
-        @RequestBody request: QueueTokenRequest?,
-    ): ResponseEntity<*> {
-        return try {
-            if (request == null || request.userId.isBlank()) {
-                throw IllegalArgumentException("Invalid request data")
-            }
-
-            val response =
-                when (request.userId) {
-                    "1" -> {
-                        val queueTokenResponse = QueueTokenResponse(queueToken = "active-token")
-                        SuccessResponse(
-                            success = true,
-                            code = "SUCCESS_01",
-                            message = "Success",
-                            data = queueTokenResponse,
-                        )
-                    }
-
-                    "2" -> {
-                        val queueTokenResponse = QueueTokenResponse(queueToken = "waiting-token")
-                        SuccessResponse(
-                            success = true,
-                            code = "SUCCESS_01",
-                            message = "Success",
-                            data = queueTokenResponse,
-                        )
-                    }
-
-                    "3" -> throw IllegalArgumentException("Invalid request data")
-                    "4" -> throw NoSuchElementException("User not found")
-                    else -> throw Exception("toke issue fail")
-                }
-
-            ResponseEntity.status(HttpStatus.CREATED).body(response)
-        } catch (ex: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ErrorResponse(
-                    code = "FAIL_01",
-                    message = "Request is invalid",
-                    data = ex.message,
-                ),
-            )
-        } catch (ex: NoSuchElementException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                ErrorResponse(
-                    code = "USER_ERROR_01",
-                    message = "User not found",
-                    data = ex.message,
-                ),
-            )
-        } catch (ex: Exception) {
-            // 예외 케이스: 서버 내부 오류
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ErrorResponse(
-                    code = "TOKEN_ERROR_01",
-                    message = "Token issue fail",
-                    data = ex.message,
-                ),
-            )
-        }
+    fun createReservationToken(
+        @RequestBody request: ReservationTokenCreateRequest,
+    ): ResponseEntity<SuccessResponse<ReservationTokenCreateResponse>> {
+        val criteria = CreateReservationTokenCriteria(request.userId)
+        val result = tokenFacade.createToken(criteria)
+        return ApiResponse.success(result.toReservationTokenCreateResponse())
     }
 
-    // 유저 토큰 조회 API
-    // 1.	active 토큰 조회 성공:
-    // 	•	헤더: USER-TOKEN: Bearer valid-token-1
-    // 2.	waiting 토큰 조회 성공:
-    // 	•	헤더: USER-TOKEN: Bearer valid-token-2
-    // 3.	만료된 토큰:
-    // 	•	헤더: USER-TOKEN: Bearer expired-token-1
-    // 4.	토큰형식에 어긋남:
-    // 	•	헤더: USER-TOKEN: Bearer12345
-    @GetMapping("")
+    @Operation(
+        summary = "토큰 상태 확인(polling 용도)",
+        description = "reservation 토큰의 활성화 상태를 확인합니다.",
+        responses = [
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "200",
+                description = "token 의 상태를 반환합니다.",
+            ),
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "400",
+                description = "잘못된 토큰 요청(header 확인)입니다.",
+            ),
+        ],
+    )
+    @GetMapping("/status")
     fun getQueueTokenStatus(
-        @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String?,
-    ): ResponseEntity<*> {
-        return try {
-            if (token.isNullOrBlank() || !token.startsWith("Bearer ")) {
-                throw IllegalArgumentException("user token is invalid or expired")
-            }
-
-            val response =
-                when (token) {
-                    "Bearer valid-token-1" -> {
-                        val queueInfo = QueueTokenStatusResponse(status = "ACTIVE")
-                        SuccessResponse(
-                            success = true,
-                            code = "SUCCESS_01",
-                            message = "Success",
-                            data = queueInfo,
-                        )
-                    }
-
-                    "Bearer valid-token-2" -> {
-                        val queueInfo = QueueTokenStatusResponse(status = "WAITING")
-                        SuccessResponse(
-                            success = true,
-                            code = "SUCCESS_01",
-                            message = "Success",
-                            data = queueInfo,
-                        )
-                    }
-
-                    "Bearer expired-token-1" -> throw IllegalArgumentException("user token is invalid or expired")
-                    else -> throw Exception("fetch token failed")
-                }
-
-            ResponseEntity.ok(response)
-        } catch (ex: IllegalArgumentException) {
-            // 예외 케이스: 헤더 누락 또는 유효하지 않음
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ErrorResponse(
-                    code = "FAIL_01",
-                    message = "Request is invalid",
-                    data = ex.message,
-                ),
-            )
-        } catch (ex: Exception) {
-            // 예외 케이스: 서버 내부 오류
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ErrorResponse(
-                    code = "TOKEN_ERROR_01",
-                    message = "fetch token failed",
-                    data = ex.message,
-                ),
-            )
-        }
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
+    ): ResponseEntity<SuccessResponse<ReservationTokenStatusResponse>> {
+        val criteria = ReservationTokenStatusCriteria(token)
+        val result = tokenFacade.getTokenStatus(criteria)
+        return ApiResponse.success(result.toReservationTokenStatusResponse())
     }
 }
-
-data class QueueTokenRequest(
-    val userId: String,
-)
-
-data class QueueTokenResponse(
-    val queueToken: String,
-)
-
-data class QueueTokenStatusResponse(
-    val status: String,
-)
