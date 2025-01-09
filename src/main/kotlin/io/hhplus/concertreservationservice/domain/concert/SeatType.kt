@@ -4,4 +4,5 @@ enum class SeatType {
     VIP,
     GOLD,
     SILVER,
+    UNDEFINED,
 }

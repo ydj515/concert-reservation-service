@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.domain.concert
 
-import io.hhplus.concertreservationservice.infrastructure.BaseEntity
+import io.hhplus.concertreservationservice.infrastructure.persistence.BaseEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

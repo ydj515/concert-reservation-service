@@ -1,6 +1,11 @@
 package io.hhplus.concertreservationservice.domain.concert
 
+import io.hhplus.concertreservationservice.domain.DateRange
+import jakarta.persistence.AttributeOverride
+import jakarta.persistence.AttributeOverrides
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -12,7 +17,6 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "concert_schedule")
@@ -26,10 +30,12 @@ class Schedule(
     val performanceDate: LocalDate,
     @Comment("공연시간(분단위)")
     val performanceTime: Int,
-    @Comment("예약시작 날짜")
-    val reservationStartedAt: LocalDateTime,
-    @Comment("예약종료 날짜")
-    val reservationEndedAt: LocalDateTime,
+    @Embedded
+    @AttributeOverrides(
+        AttributeOverride(name = "start", column = Column(name = "reserved_start_at")),
+        AttributeOverride(name = "end", column = Column(name = "reserved_end_at")),
+    )
+    val reservationPeriod: DateRange,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "concert_id", nullable = false)
     val concert: Concert,

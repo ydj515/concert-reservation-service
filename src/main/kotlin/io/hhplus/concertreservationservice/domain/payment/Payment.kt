@@ -1,6 +1,11 @@
 package io.hhplus.concertreservationservice.domain.payment
 
+import io.hhplus.concertreservationservice.domain.Money
 import io.hhplus.concertreservationservice.domain.user.User
+import jakarta.persistence.AttributeOverride
+import jakarta.persistence.AttributeOverrides
+import jakarta.persistence.Column
+import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -20,8 +25,11 @@ class Payment(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("id")
     val id: Long = 0L,
-    @Comment("공연일정")
-    val amount: Long,
+    @Embedded
+    @AttributeOverrides(
+        AttributeOverride(name = "amount", column = Column(name = "totalCost")),
+    )
+    var totalCost: Money = Money(0),
     @Comment("결제상태")
     @Enumerated(EnumType.STRING)
     val status: PaymentStatus,
