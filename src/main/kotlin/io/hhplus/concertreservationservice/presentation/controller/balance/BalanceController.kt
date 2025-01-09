@@ -1,9 +1,16 @@
 package io.hhplus.concertreservationservice.presentation.controller.balance
 
-import io.hhplus.concertreservationservice.common.response.ErrorResponse
+import io.hhplus.concertreservationservice.application.facade.balance.BalanceFacade
+import io.hhplus.concertreservationservice.application.facade.balance.request.ChargeBalanceCriteria
+import io.hhplus.concertreservationservice.application.facade.balance.request.FetchBalanceCriteria
+import io.hhplus.concertreservationservice.application.facade.balance.response.ChargeBalanceResult
+import io.hhplus.concertreservationservice.application.facade.balance.response.FetchBalanceResult
+import io.hhplus.concertreservationservice.common.response.ApiResponse
 import io.hhplus.concertreservationservice.common.response.SuccessResponse
+import io.hhplus.concertreservationservice.domain.Money
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
-import org.springframework.http.HttpStatus
+import io.hhplus.concertreservationservice.presentation.controller.balance.request.BalanceChargeRequest
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,120 +21,53 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/balance")
-class BalanceController {
-    private val userBalances =
-        mutableMapOf(
-            "Bearer valid-token-1" to 1000L,
-            "Bearer valid-token-2" to 500L,
-        )
-
-    // 잔액 충전 API
-    // 	1.	충전 성공:
-    // 	•	헤더: USER-TOKEN: Bearer valid-token-1
-    // 	•	요청: { "amount": 500 }
-    // 	•	응답: 200 OK, 새로운 잔액: 1500.
-    // 	2.	유효하지 않은 USER-TOKEN:
-    // 	•	헤더: USER-TOKEN: invalid-token
-    // 	•	요청: { "amount": 500 }
-    // 	•	응답: 400 Bad Request, “Invalid or missing USER-TOKEN header”.
-    // 	3.	유효하지 않은 금액:
-    // 	•	헤더: USER-TOKEN: Bearer valid-token-1
-    // 	•	요청: { "amount": -100 }
-    // 	•	응답: 400 Bad Request, “Invalid balance request data”.
+class BalanceController(
+    private val balanceFacade: BalanceFacade,
+) {
+    @Operation(
+        summary = "잔액 충전",
+        description = "유저의 잔액을 충전합니다.",
+        responses = [
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "200",
+                description = "충전 완료",
+            ),
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "400",
+                description = "잘못된 토큰 요청(header 확인)이거나 충전하는 금액이 음수입니다.",
+            ),
+        ],
+    )
     @PostMapping("")
     fun chargeBalance(
-        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
-        @RequestBody balanceRequest: BalanceChargeRequest?,
-    ): ResponseEntity<*> {
-        return try {
-            if (userToken.isNullOrBlank() || !userBalances.containsKey(userToken)) {
-                throw IllegalArgumentException("Invalid or missing USER-TOKEN header")
-            }
-            if (balanceRequest == null || balanceRequest.amount <= 0) {
-                throw IllegalArgumentException("Invalid balance request data")
-            }
-
-            val newBalance =
-                userBalances.computeIfPresent(userToken) { _, currentBalance ->
-                    currentBalance + balanceRequest.amount
-                } ?: throw IllegalStateException("User balance not found")
-
-            val response =
-                SuccessResponse(
-                    success = true,
-                    code = "SUCCESS_01",
-                    message = "Success",
-                    data = BalanceResponse(amount = newBalance),
-                )
-            ResponseEntity.ok(response)
-        } catch (ex: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ErrorResponse(
-                    code = "ERROR_01",
-                    message = "Request is invalid",
-                    data = ex.message,
-                ),
-            )
-        } catch (ex: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ErrorResponse(
-                    code = "BALANCE_ERROR_02",
-                    message = "BalanceChargeError",
-                    data = "balance charge is failed",
-                ),
-            )
-        }
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
+        @RequestBody balanceRequest: BalanceChargeRequest,
+    ): ResponseEntity<SuccessResponse<ChargeBalanceResult>> {
+        val criteria = ChargeBalanceCriteria(Money(balanceRequest.amount), token)
+        val result = balanceFacade.chargeBalance(criteria)
+        return ApiResponse.success(result)
     }
 
-    // 잔액 조회 API
-    //  1.	Happy Case:
-    // 	•	헤더: USER-TOKEN: Bearer valid-token-2
-    // 	•	응답: 200 OK, 현재 잔액: 500.
-    // 	2.	유효하지 않은 USER-TOKEN:
-    // 	•	헤더: USER-TOKEN: invalid-token
-    // 	•	응답: 400 Bad Request, “Invalid or missing USER-TOKEN header”.
+    @Operation(
+        summary = "잔액 조회",
+        description = "유저의 잔액을 조회합니다.",
+        responses = [
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "200",
+                description = "잔액 조회 완료",
+            ),
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "400",
+                description = "잘못된 토큰 요청(header 확인)입니다.",
+            ),
+        ],
+    )
     @GetMapping("")
     fun getBalance(
-        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String?,
-    ): ResponseEntity<*> {
-        return try {
-            if (userToken.isNullOrBlank() || !userBalances.containsKey(userToken)) {
-                throw IllegalArgumentException("Invalid or missing USER-TOKEN header")
-            }
-
-            val currentBalance = userBalances[userToken] ?: 0L
-            val response =
-                SuccessResponse(
-                    success = true,
-                    code = "SUCCESS_01",
-                    message = "Success",
-                    data = BalanceResponse(amount = currentBalance),
-                )
-            ResponseEntity.ok(response)
-        } catch (ex: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ErrorResponse(
-                    code = "ERROR_01",
-                    message = "Request is invalid",
-                    data = ex.message,
-                ),
-            )
-        } catch (ex: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ErrorResponse(
-                    code = "BALANCE_ERROR_01",
-                    message = "BalanceError",
-                    data = "fetch balance is failed",
-                ),
-            )
-        }
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
+    ): ResponseEntity<SuccessResponse<FetchBalanceResult>> {
+        val criteria = FetchBalanceCriteria(token)
+        val result = balanceFacade.getBalance(criteria)
+        return ApiResponse.success(result)
     }
 }
-
-data class BalanceChargeRequest(
-    val amount: Long,
-)
-
-data class BalanceResponse(
-    val amount: Long,
-)
