@@ -1,6 +1,10 @@
 package io.hhplus.concertreservationservice.domain.concert
 
-import jakarta.persistence.CascadeType
+import io.hhplus.concertreservationservice.domain.Money
+import jakarta.persistence.AttributeOverride
+import jakarta.persistence.AttributeOverrides
+import jakarta.persistence.Column
+import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -23,13 +27,16 @@ class ScheduleSeat(
     @Enumerated(EnumType.STRING)
     @Comment("좌석 유형")
     val type: SeatType,
-    @Comment("좌석 가격")
-    val price: Long,
+    @Embedded
+    @AttributeOverrides(
+        AttributeOverride(name = "amount", column = Column(name = "price")),
+    )
+    var price: Money = Money(0),
     @Comment("좌석 유형별 수")
     val seatCount: Long,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", nullable = false)
     val schedule: Schedule,
-    @OneToMany(mappedBy = "scheduleSeat", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "scheduleSeat", fetch = FetchType.LAZY)
     val seats: List<Seat> = mutableListOf(),
 )

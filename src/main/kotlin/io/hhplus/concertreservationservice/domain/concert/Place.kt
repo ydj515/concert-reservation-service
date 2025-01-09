@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.domain.concert
 
-import io.hhplus.concertreservationservice.infrastructure.BaseEntity
+import io.hhplus.concertreservationservice.infrastructure.persistence.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -15,7 +15,7 @@ class Place(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("id")
     val id: Long = 0L,
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @Comment("공연장소 명")
     val name: String,
     @Comment("수용좌석수")
