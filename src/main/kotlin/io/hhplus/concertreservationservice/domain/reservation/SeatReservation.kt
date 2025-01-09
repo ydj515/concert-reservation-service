@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.domain.reservation
 
 import io.hhplus.concertreservationservice.domain.concert.Seat
-import io.hhplus.concertreservationservice.domain.payment.Payment
 import io.hhplus.concertreservationservice.domain.user.User
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -24,7 +24,7 @@ class SeatReservation(
     val id: Long = 0L,
     @Enumerated(EnumType.STRING)
     @Comment("예약 상태")
-    val status: ReservationStatus = ReservationStatus.RESERVED,
+    var status: ReservationStatus = ReservationStatus.RESERVED,
     @Comment("좌석 예약일시")
     val reservedAt: LocalDateTime = LocalDateTime.now(),
     @Comment("결제전 좌석예약 임시 만료일시")
@@ -35,9 +35,17 @@ class SeatReservation(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seat_id", nullable = false)
     val seat: Seat,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id", nullable = false)
-    val payment: Payment,
+    @Comment("pay id")
+    @Column(name = "payment_id", nullable = true)
+    var paymentId: Long?,
 ) {
     fun isExpired(): Boolean = LocalDateTime.now().isAfter(reservationExpiredAt)
+
+    fun isReserved(): Boolean = status == ReservationStatus.RESERVED
+
+    fun isCompletePayment(paidId: Long): Boolean {
+        status = ReservationStatus.PAID
+        paymentId = paidId
+        return status == ReservationStatus.PAID
+    }
 }

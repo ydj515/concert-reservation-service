@@ -1,9 +1,14 @@
 package io.hhplus.concertreservationservice.presentation.controller.concert
 
-import io.hhplus.concertreservationservice.common.response.ErrorResponse
+import io.hhplus.concertreservationservice.application.facade.concert.ConcertFacade
+import io.hhplus.concertreservationservice.application.facade.concert.request.SeatReserveCriteria
+import io.hhplus.concertreservationservice.application.facade.concert.response.toSeatReserveResponse
+import io.hhplus.concertreservationservice.common.response.ApiResponse
 import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
-import org.springframework.http.HttpStatus
+import io.hhplus.concertreservationservice.presentation.controller.concert.request.ReservationSeatRequest
+import io.hhplus.concertreservationservice.presentation.controller.concert.response.ReservationSeatResponse
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,98 +19,32 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/concert")
-class ConcertReservationController {
-    private val validConcertSchedules =
-        mapOf(
-            1L to
-                mapOf(
-                    101L to
-                        mapOf(
-                            1L to mutableListOf(1, 2, 3),
-                            2L to mutableListOf(4, 5),
-                        ),
-                ),
-        )
-
-    private val validTokens = setOf("Bearer valid-token-1", "Bearer valid-token-2")
-
-    // 좌석 예약 요청 API
-    // 	1.	정상응답:
-    // 	•	경로: /api/concert/1/schedules/101/reservations/1
-    // 	•	헤더: USER-TOKEN: Bearer valid-token-1
-    // 	•	요청: { "reservationId": 1 }
-    // 	•	응답: 200 OK, reservationId:1, seatNo: 1
-    // 	2.	유효하지 않은 USER-TOKEN:
-    // 	•	헤더: USER-TOKEN: invalid-token
-    // 	•	응답: 400 Bad Request, "Invalid or missing USER-TOKEN header".
-    // 	3.	유효하지 않은 concertId 또는 scheduleId:
-    // 	•	경로: /api/concert/999/schedules/888/reservations
-    // 	•	응답: 400 Bad Request, "Invalid concertId or scheduleId".
-    // 	3.	유효하지 않은 좌석 번호(50 이상의 수)
-    // 	•	요청: { "reservationId": 51 }
-    // 	•	응답: 400 Bad Request, "Invalid seatNo".
-    @PostMapping("/{concertId}/schedules/{scheduleId}/reservations/{reservationId}")
+class ConcertReservationController(
+    private val concertFacade: ConcertFacade,
+) {
+    @Operation(
+        summary = "콘서트 스케쥴 좌석 예약",
+        description = "콘서트의 스케쥴의 좌석을 예약합니다.",
+        responses = [
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "200",
+                description = "해당 콘서트의 스케쥴에 예약을 진행합니다. 예약 상태를 반환합니다.",
+            ),
+            io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "400",
+                description = "잘못된 토큰 요청(header 확인)이거나 concertId 혹은 scheduleId 혹은 좌석 번호가 잘못되었습니다.",
+            ),
+        ],
+    )
+    @PostMapping("/{concertId}/schedules/{scheduleId}/reservations")
     fun reserveSeat(
         @PathVariable concertId: Long,
         @PathVariable scheduleId: Long,
-        @PathVariable reservationId: Long,
-        @RequestBody reservationRequest: ReservationRequest,
-        @RequestHeader(RESERVATION_QUEUE_TOKEN) userToken: String,
-    ): ResponseEntity<*> {
-        return try {
-            if (userToken.isNullOrBlank() || userToken !in validTokens) {
-                throw IllegalArgumentException("Invalid or missing USER-TOKEN")
-            }
-
-            val schedule =
-                validConcertSchedules[concertId]?.get(scheduleId)
-                    ?: throw IllegalArgumentException("Invalid concertId or scheduleId")
-
-            if (reservationRequest.seatNo > 50) {
-                throw IllegalArgumentException("Invalid seatNo")
-            }
-
-            val seatNo = reservationRequest.seatNo
-            val seats = schedule[reservationId]!!
-
-            if (!seats.contains(seatNo)) {
-                throw IllegalArgumentException("Invalid seatNo")
-            }
-
-            val reservationResponse = ReservationResponse(reservationId = 1L, seatNo = seatNo)
-            val response =
-                SuccessResponse(
-                    success = true,
-                    code = "SUCCESS_01",
-                    message = "Success",
-                    data = reservationResponse,
-                )
-            ResponseEntity.status(HttpStatus.CREATED).body(response)
-        } catch (ex: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ErrorResponse(
-                    code = "FAIL_01",
-                    message = "Request is invalid",
-                    data = ex.message,
-                ),
-            )
-        } catch (ex: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ErrorResponse(
-                    code = "RESERVATION_ERROR_01",
-                    message = "ReservationError",
-                    data = "reservation failed",
-                ),
-            )
-        }
+        @RequestBody reservationRequest: ReservationSeatRequest,
+        @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
+    ): ResponseEntity<SuccessResponse<ReservationSeatResponse>> {
+        val criteria = SeatReserveCriteria(concertId, scheduleId, reservationRequest.seatNo, token)
+        val result = concertFacade.reserveSeat(criteria)
+        return ApiResponse.success(result.toSeatReserveResponse())
     }
 }
-
-data class ReservationRequest(
-    val seatNo: Int,
-)
-
-data class ReservationResponse(
-    val reservationId: Long,
-    val seatNo: Int,
-)
