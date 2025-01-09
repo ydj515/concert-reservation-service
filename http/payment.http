@@ -3,10 +3,11 @@
 # Case 1: 결제 성공
 POST {{host}}/api/payment
 Content-Type: application/json
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
 
 {
-  "reservationId": 100
+  "reservationId": 1,
+  "amount": 1000
 }
 
 ###
@@ -14,10 +15,11 @@ X-Reservation-Queue-Token: Bearer valid-token-1
 # Case 2: 결제 실패
 POST {{host}}/api/payment
 Content-Type: application/json
-X-Reservation-Queue-Token: Bearer valid-token-2
+X-Reservation-Queue-Token: {{accessToken}}
 
 {
-  "reservationId": 100
+  "reservationId": 100,
+  "amount": 1000
 }
 
 ###
@@ -25,10 +27,11 @@ X-Reservation-Queue-Token: Bearer valid-token-2
 # Case 3: 유효하지 않은 예약 ID
 POST {{host}}/api/payment
 Content-Type: application/json
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
 
 {
-  "reservationId": 200
+  "reservationId": 200,
+  "amount": 1000
 }
 
 ###
@@ -39,7 +42,8 @@ Content-Type: application/json
 X-Reservation-Queue-Token: invalid-token
 
 {
-  "reservationId": 100
+  "reservationId": 100,
+  "amount": 1000
 }
 
 ###
@@ -47,8 +51,9 @@ X-Reservation-Queue-Token: invalid-token
 # Case 5: 예약 ID 누락 또는 음수
 POST {{host}}/api/payment
 Content-Type: application/json
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
 
 {
-  "reservationId": -1
+  "reservationId": -1,
+  "amount": 1000
 }

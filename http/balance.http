@@ -3,7 +3,7 @@
 # Case 1: 충전 성공
 POST {{host}}/api/balance
 Content-Type: application/json
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
 
 {
   "amount": 500
@@ -25,8 +25,23 @@ X-Reservation-Queue-Token: invalid-token
 # Case 3: 유효하지 않은 금액
 POST {{host}}/api/balance
 Content-Type: application/json
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
 
 {
   "amount": -100
 }
+
+
+### 잔액 조회 API
+
+# Case 1: 조회 성공
+GET {{host}}/api/balance
+Content-Type: application/json
+X-Reservation-Queue-Token: {{accessToken}}
+
+###
+
+# Case 2: 유효하지 않은 USER-TOKEN
+GET {{host}}/api/balance
+Content-Type: application/json
+X-Reservation-Queue-Token: invalid-token
