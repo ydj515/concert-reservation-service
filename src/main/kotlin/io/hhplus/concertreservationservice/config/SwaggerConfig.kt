@@ -40,7 +40,7 @@ class SwaggerConfig {
     fun publicApi(): GroupedOpenApi {
         return GroupedOpenApi.builder()
             .group("public")
-            .pathsToMatch("/api/**")
+            .pathsToMatch("/api/**", "/reservation-token/**")
             .build()
     }
 }
