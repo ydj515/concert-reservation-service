@@ -1,5 +1,6 @@
 ### config file ###
 application.yml
+jwt.yml
 .env
 
 ### database data ###

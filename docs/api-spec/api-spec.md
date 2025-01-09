@@ -4,9 +4,9 @@
 
 ### 기본정보
 
-| 메서드  | endpoint         |
-|------|------------------|
-| POST | /api/queue-token |
+| 메서드  | endpoint               |
+|------|------------------------|
+| POST | /api/reservation-token |
 
 ### 요청
 
@@ -40,7 +40,7 @@
 #### 요청
 
 ```bash
-curl --location --request POST 'localhost:8080/api/queue-token' \
+curl --location --request POST 'localhost:8080/api/reservation-token' \
 --header 'Content-Type: application/json' \
 --data '{
     "userId": "${userId}"
@@ -112,18 +112,18 @@ Content-Type: application/json
 
 ### 기본정보
 
-| 메서드 | endpoint         |
-|-----|------------------|
-| GET | /api/queue-token |
+| 메서드 | endpoint               |
+|-----|------------------------|
+| GET | /api/reservation-token |
 
 ### 요청
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 ### 응답
 
@@ -143,7 +143,7 @@ Content-Type: application/json
 #### 요청
 
 ```bash
-curl --location --request GET 'localhost:8080/api/queue-token' \
+curl --location --request GET 'localhost:8080/api/reservation-token' \
 --header 'X-Reservation-Queue-Token: Bearer ${USER_TOKEN}'
 ```
 
@@ -206,10 +206,10 @@ Content-Type: application/json
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 ### 응답
 
@@ -284,10 +284,10 @@ Content-Type: application/json
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 #### 경로 변수
 
@@ -380,10 +380,10 @@ Content-Type: application/json
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 #### 경로 변수
 
@@ -504,10 +504,10 @@ Content-Type: application/json
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 #### 경로 변수
 
@@ -620,10 +620,10 @@ Content-Type: application/json
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 #### 경로 변수
 
@@ -752,10 +752,10 @@ Content-Type: application/json
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 #### 본문
 
@@ -862,10 +862,10 @@ Content-Type: application/json
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 ### 응답
 
@@ -949,10 +949,10 @@ Content-Type: application/json
 
 #### 헤더
 
-| 이름           | 설명               | 필수 |
-|--------------|------------------|----|
-| Content-Type | application/json | O  |
-| X-Reservation-Queue-Token   | Bearer 토큰 인증     | O  |
+| 이름                        | 설명               | 필수 |
+|---------------------------|------------------|----|
+| Content-Type              | application/json | O  |
+| X-Reservation-Queue-Token | Bearer 토큰 인증     | O  |
 
 #### 본문
 

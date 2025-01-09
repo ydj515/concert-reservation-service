@@ -7,7 +7,7 @@ sequenceDiagram
     participant QueueManager
     participant Database
 
-    User ->> API: POST /queue-token
+    User ->> API: POST /reservation-token
     API ->> QueueManager: 토큰 발급 요청
     QueueManager ->> Database: 토큰 정보 저장(status: waiting)
     QueueManager -->> API: 토큰 발급 완료
@@ -24,7 +24,7 @@ sequenceDiagram
     participant Database
 
     loop 주기적으로(1분?) 확인
-        User ->> API: GET /queue-token<br/> USER-TOKEN: Bearer {queueToken}
+        User ->> API: GET /reservation-token<br/> USER-TOKEN: Bearer {queueToken}
         API ->> QueueManager: 토큰 상태 조회
         QueueManager ->> Database: 토큰 상태 확인
         
@@ -48,7 +48,7 @@ sequenceDiagram
     participant QueueManager
     participant Database
 
-    User1 ->> API: POST /queue-token
+    User1 ->> API: POST /reservation-token
     API ->> QueueManager: 토큰 발급 요청
     QueueManager ->> Database: 토큰 정보 저장 (WAITING 상태로)
     QueueManager -->> API: 토큰 발급 완료 {queueToken: "abc123", status: "WAITING"}
@@ -56,7 +56,7 @@ sequenceDiagram
     User1 ->> User1: polling으로 토큰이 활성화인지 확인
     User1 ->> User1: 토큰 활성화되었다는 응답 받음 <br/> {queueToken: "abc123", status: "ACTIVE"}
     Note over User1,Database: N번째 사용자 토큰이 활성화 된 상태 <br/> (실제로는 N명의 유저의 토큰을 활성화 시킨 상태)
-    User2 ->> API: POST /queue-token
+    User2 ->> API: POST /reservation-token
     API ->> QueueManager: 토큰 발급 요청
     QueueManager ->> Database: 토큰 정보 저장 (WAITING 상태로)
     QueueManager -->> API: 토큰 발급 완료 {queueToken: "abc124", status: "WAITING"}

@@ -1,0 +1,778 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "concert reservation service",
+    "description": "concert reservation service 입니다.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "X-Reservation-Queue-Token": [
+
+      ]
+    }
+  ],
+  "paths": {
+    "/reservation-token": {
+      "post": {
+        "tags": [
+          "token-controller"
+        ],
+        "summary": "토큰 발급",
+        "description": "reservation 토큰을 발급합니다.",
+        "operationId": "createReservationToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationTokenCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "토큰 발급 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseReservationTokenCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseReservationTokenCreateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payment": {
+      "post": {
+        "tags": [
+          "payment-controller"
+        ],
+        "summary": "결제 진행",
+        "description": "예약건에 대해서 결제를 진행합니다.",
+        "operationId": "processPayment",
+        "parameters": [
+          {
+            "name": "X-Reservation-Queue-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "결제 완료",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "예약 ID 혹은 결제 금액이 맞지 않습니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePaymentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/concert/{concertId}/schedules/{scheduleId}/reservations": {
+      "post": {
+        "tags": [
+          "concert-reservation-controller"
+        ],
+        "summary": "콘서트 스케쥴 좌석 예약",
+        "description": "콘서트의 스케쥴의 좌석을 예약합니다.",
+        "operationId": "reserveSeat",
+        "parameters": [
+          {
+            "name": "concertId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-Reservation-Queue-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationSeatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "해당 콘서트의 스케쥴에 예약을 진행합니다. 예약 상태를 반환합니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseReservationSeatResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 토큰 요청(header 확인)이거나 concertId 혹은 scheduleId 혹은 좌석 번호가 잘못되었습니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseReservationSeatResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/balance": {
+      "get": {
+        "tags": [
+          "balance-controller"
+        ],
+        "summary": "잔액 조회",
+        "description": "유저의 잔액을 조회합니다.",
+        "operationId": "getBalance",
+        "parameters": [
+          {
+            "name": "X-Reservation-Queue-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "잔액 조회 완료",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFetchBalanceResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 토큰 요청(header 확인)입니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFetchBalanceResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "balance-controller"
+        ],
+        "summary": "잔액 충전",
+        "description": "유저의 잔액을 충전합니다.",
+        "operationId": "chargeBalance",
+        "parameters": [
+          {
+            "name": "X-Reservation-Queue-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BalanceChargeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "충전 완료",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseChargeBalanceResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 토큰 요청(header 확인)이거나 충전하는 금액이 음수입니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseChargeBalanceResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservation-token/status": {
+      "get": {
+        "tags": [
+          "token-controller"
+        ],
+        "summary": "토큰 상태 확인(polling 용도)",
+        "description": "reservation 토큰의 활성화 상태를 확인합니다.",
+        "operationId": "getQueueTokenStatus",
+        "parameters": [
+          {
+            "name": "X-Reservation-Queue-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "token 의 상태를 반환합니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseReservationTokenStatusResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 토큰 요청(header 확인)입니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseReservationTokenStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/concert/{concertId}/schedules/{scheduleId}/seats": {
+      "get": {
+        "tags": [
+          "concert-controller"
+        ],
+        "summary": "콘서트 스케쥴 예약 날짜 조회",
+        "description": "콘서트의 스케쥴예약을 위해 조회합니다.",
+        "operationId": "getAvailableSeats",
+        "parameters": [
+          {
+            "name": "concertId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "X-Reservation-Queue-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "해당 콘서트의 스케쥴에 예약 가능한 좌석 리스트를 반환합니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseSearchAvailSeatResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 토큰 요청(header 확인)이거나 concertId 혹은 scheduleId가 잘못되었습니다.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseSearchAvailSeatResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ReservationTokenCreateRequest": {
+        "required": [
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ReservationTokenCreateResponse": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessResponseReservationTokenCreateResponse": {
+        "required": [
+          "code",
+          "message",
+          "success",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReservationTokenCreateResponse"
+          }
+        }
+      },
+      "PaymentRequest": {
+        "required": [
+          "amount",
+          "reservationId"
+        ],
+        "type": "object",
+        "properties": {
+          "reservationId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PaymentResponse": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "COMPLETED",
+              "FAILED"
+            ]
+          }
+        }
+      },
+      "SuccessResponsePaymentResponse": {
+        "required": [
+          "code",
+          "message",
+          "success",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PaymentResponse"
+          }
+        }
+      },
+      "ReservationSeatRequest": {
+        "required": [
+          "seatNo"
+        ],
+        "type": "object",
+        "properties": {
+          "seatNo": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ReservationSeatResponse": {
+        "required": [
+          "reservationId",
+          "seatNo"
+        ],
+        "type": "object",
+        "properties": {
+          "reservationId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "seatNo": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SuccessResponseReservationSeatResponse": {
+        "required": [
+          "code",
+          "message",
+          "success",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReservationSeatResponse"
+          }
+        }
+      },
+      "BalanceChargeRequest": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ChargeBalanceResult": {
+        "required": [
+          "balance",
+          "userId",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "balance": {
+            "$ref": "#/components/schemas/Money"
+          }
+        }
+      },
+      "Money": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "SuccessResponseChargeBalanceResult": {
+        "required": [
+          "code",
+          "message",
+          "success",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ChargeBalanceResult"
+          }
+        }
+      },
+      "ReservationTokenStatusResponse": {
+        "required": [
+          "status",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "WAITING",
+              "ACTIVE"
+            ]
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "SuccessResponseReservationTokenStatusResponse": {
+        "required": [
+          "code",
+          "message",
+          "success",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReservationTokenStatusResponse"
+          }
+        }
+      },
+      "SearchAvailSeatResponse": {
+        "required": [
+          "available",
+          "seats"
+        ],
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "seats": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "SuccessResponseSearchAvailSeatResponse": {
+        "required": [
+          "code",
+          "message",
+          "success",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SearchAvailSeatResponse"
+          }
+        }
+      },
+      "FetchBalanceResult": {
+        "required": [
+          "balance",
+          "userId",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "balance": {
+            "$ref": "#/components/schemas/Money"
+          }
+        }
+      },
+      "SuccessResponseFetchBalanceResult": {
+        "required": [
+          "code",
+          "message",
+          "success",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FetchBalanceResult"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "X-Reservation-Queue-Token": {
+        "type": "apiKey",
+        "description": "콘서트 예약 서비스 이용을 위한 대기열 순서 토큰",
+        "name": "X-Reservation-Queue-Token",
+        "in": "header"
+      }
+    }
+  }
+}
