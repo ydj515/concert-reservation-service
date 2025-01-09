@@ -2,62 +2,58 @@
 
 # Case 1: 정상 응답
 GET {{host}}/api/concert
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
 
 ###
 
 # Case 2: 유효하지 않은 USER-TOKEN
 GET {{host}}/api/concert
-X-Reservation-Queue-Token: invalid-token
+X-Reservation-Queue-Token: {{accessToken}}
 
 ###
 
 # Case 3: 존재하지 않는 concertId
 GET {{host}}/api/concert/999
-X-Reservation-Queue-Token: Bearer valid-token-1
-
-###
+X-Reservation-Queue-Token: {{accessToken}}
 
 ### 콘서트 스케줄 조회 API
 
 # Case 1: 정상 응답
 GET {{host}}/api/concert/1/schedules
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
 
 ###
 
 # Case 2: 유효하지 않은 USER-TOKEN
 GET {{host}}/api/concert/1/schedules
-X-Reservation-Queue-Token: invalid-token
+X-Reservation-Queue-Token: {{accessToken}}
 
 ###
 
 # Case 3: 존재하지 않는 concertId
 GET {{host}}/api/concert/999/schedules
-X-Reservation-Queue-Token: Bearer valid-token-1
-
-###
+X-Reservation-Queue-Token: {{accessToken}}
 
 ### 예약 가능 날짜/좌석 조회 API
 
 # Case 1: 정상 응답
-GET {{host}}/api/concert/1/schedules/101/seats?date=2025-01-01
-X-Reservation-Queue-Token: Bearer valid-token-1
+GET {{host}}/api/concert/1/schedules/1/seats?date=2024-01-01
+X-Reservation-Queue-Token: {{accessToken}}
 
 ###
 
 # Case 2: 유효하지 않은 USER-TOKEN
-GET {{host}}/api/concert/1/schedules/101/seats?date=2025-01-01
+GET {{host}}/api/concert/1/schedules/1/seats?date=2024-01-01
 X-Reservation-Queue-Token: invalid-token
 
 ###
 
-# Case 3: 유효하지 않은 concertId 또는 scheduleId
+# Case 3: 유효하지 않은 concertId 또는 scheduleId => 빈 리스트 return
 GET {{host}}/api/concert/999/schedules/888/seats?date=2025-01-01
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
 
 ###
 
 # Case 4: 좌석이 없는 경우
 GET {{host}}/api/concert/1/schedules/101/seats?date=2025-01-02
-X-Reservation-Queue-Token: Bearer valid-token-1
+X-Reservation-Queue-Token: {{accessToken}}
