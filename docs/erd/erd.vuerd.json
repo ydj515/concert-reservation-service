@@ -250,6 +250,7 @@
         "comment": "사용자 대기열 토큰(사용자가 여러개의 토큰가지고 있을 수 있음)",
         "columnIds": [
           "2cK8PKZtMXrueaCG40iba",
+          "BsVu7esCe5ei3zjgINS2G",
           "JAIEj0cwDUl56rn2WA1FI",
           "WYeNXMO_VlvkhUocndKDX",
           "GQ4b04YOWdaZpujTTDRLL"
@@ -257,6 +258,7 @@
         "seqColumnIds": [
           "2cK8PKZtMXrueaCG40iba",
           "upwdCvyyvepvlORqdYCTN",
+          "BsVu7esCe5ei3zjgINS2G",
           "JAIEj0cwDUl56rn2WA1FI",
           "WYeNXMO_VlvkhUocndKDX",
           "c9yoAJbF96hzJYDE_1Ymc",
@@ -271,7 +273,7 @@
           "color": ""
         },
         "meta": {
-          "updateAt": 1736102709147,
+          "updateAt": 1736180643827,
           "createAt": 1735547392099
         }
       },
@@ -1357,6 +1359,26 @@
           "updateAt": 1736000671783,
           "createAt": 1736000621450
         }
+      },
+      "BsVu7esCe5ei3zjgINS2G": {
+        "id": "BsVu7esCe5ei3zjgINS2G",
+        "tableId": "eX3RGPkwiwyIMIFEFbPvQ",
+        "name": "token",
+        "comment": "토큰",
+        "dataType": "VARCHAR",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1736180653719,
+          "createAt": 1736180640514
+        }
       }
     },
     "relationshipEntities": {
@@ -1548,7 +1570,7 @@
             "GQ4b04YOWdaZpujTTDRLL"
           ],
           "x": 843,
-          "y": 914,
+          "y": 926,
           "direction": 2
         },
         "meta": {
@@ -2265,6 +2287,16 @@
         "name": 1736000646548,
         "dataType": 1736000651107,
         "comment": 1736000671782
+      }
+    ],
+    "BsVu7esCe5ei3zjgINS2G": [
+      "tableColumnEntities",
+      1736180640511,
+      -1,
+      {
+        "name": 1736180646079,
+        "dataType": 1736180649619,
+        "comment": 1736180653718
       }
     ]
   }
