@@ -26,7 +26,7 @@ class ReservationReservationTokenRepositoryImpl(
     }
 
     override fun deleteTokens(tokens: List<ReservationToken>) {
-        reservationTokenJpaRepository.deleteAll(tokens)
+        reservationTokenJpaRepository.deleteAllInBatch(tokens)
     }
 
     override fun deleteToken(token: ReservationToken) {

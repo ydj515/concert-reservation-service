@@ -38,10 +38,10 @@ class SeatReservationRepositoryImpl(
     }
 
     override fun deleteReservations(reservations: List<SeatReservation>) {
-        return seatReservationJpaRepository.deleteAll(reservations)
+        return seatReservationJpaRepository.deleteAllInBatch(reservations)
     }
 
     override fun deleteAllReservations() {
-        return seatReservationJpaRepository.deleteAll()
+        return seatReservationJpaRepository.deleteAllInBatch()
     }
 }

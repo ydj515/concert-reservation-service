@@ -26,7 +26,7 @@ class BalanceServiceConcurrencyTest
     ) : BehaviorSpec({
 
             afterTest {
-                userJpaRepository.deleteAll()
+                userJpaRepository.deleteAllInBatch()
             }
 
             given("동시성 잔액 충전 테스트") {

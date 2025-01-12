@@ -10,6 +10,7 @@ import io.hhplus.concertreservationservice.domain.token.exception.TokenNotFoundE
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.TokenProvider
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.UserJpaRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -33,12 +34,14 @@ class BalanceUseCaseTest
         private val balanceService: BalanceService,
         private val tokenProvider: TokenProvider,
         private val userJpaRepository: UserJpaRepository,
+        private val seatReservationJpaRepository: SeatReservationJpaRepository,
         private val tokenJpaRepository: ReservationTokenJpaRepository,
     ) : BehaviorSpec({
 
             afterEach {
-                tokenJpaRepository.deleteAll()
-                userJpaRepository.deleteAll()
+                tokenJpaRepository.deleteAllInBatch()
+                seatReservationJpaRepository.deleteAllInBatch()
+                userJpaRepository.deleteAllInBatch()
             }
 
             given("유효한 토큰과 금액이 주어졌을 때") {
