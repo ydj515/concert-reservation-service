@@ -34,6 +34,7 @@ class User(
     }
 
     fun deductMoney(amount: Money) {
+        require(amount.amount > 0) { "사용 금액은 0원 이상이어야 합니다." }
         this.balance = this.balance.subtract(amount)
     }
 }
