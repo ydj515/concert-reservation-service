@@ -1,9 +1,9 @@
 package io.hhplus.concertreservationservice.infrastructure.persistence
 
-import io.hhplus.concertreservationservice.application.service.concert.request.ReserveSeatCommand
-import io.hhplus.concertreservationservice.application.service.concert.request.SearchAvailSeatCommand
 import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
+import io.hhplus.concertreservationservice.domain.concert.service.request.ReserveSeatCommand
+import io.hhplus.concertreservationservice.domain.concert.service.request.SearchAvailSeatCommand
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatJpaRepository
 import org.springframework.stereotype.Repository
 

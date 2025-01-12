@@ -1,8 +1,7 @@
 package io.hhplus.concertreservationservice.application.service.concert
 
-import io.hhplus.concertreservationservice.application.service.concert.request.SearchAvailSeatCommand
 import io.hhplus.concertreservationservice.domain.DateRange
-import io.hhplus.concertreservationservice.domain.Money
+import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
 import io.hhplus.concertreservationservice.domain.concert.Place
 import io.hhplus.concertreservationservice.domain.concert.Schedule
@@ -10,6 +9,8 @@ import io.hhplus.concertreservationservice.domain.concert.ScheduleSeat
 import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.SeatType
 import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
+import io.hhplus.concertreservationservice.domain.concert.service.ConcertService
+import io.hhplus.concertreservationservice.domain.concert.service.request.SearchAvailSeatCommand
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk

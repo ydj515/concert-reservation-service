@@ -1,9 +1,7 @@
 package io.hhplus.concertreservationservice.application.service.concert
 
-import io.hhplus.concertreservationservice.application.service.concert.request.CreateReserveSeatCommand
-import io.hhplus.concertreservationservice.application.service.payment.response.ProcessPaymentInfo
 import io.hhplus.concertreservationservice.domain.DateRange
-import io.hhplus.concertreservationservice.domain.Money
+import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
 import io.hhplus.concertreservationservice.domain.concert.Place
 import io.hhplus.concertreservationservice.domain.concert.Schedule
@@ -14,7 +12,10 @@ import io.hhplus.concertreservationservice.domain.concert.exception.ReservationN
 import io.hhplus.concertreservationservice.domain.concert.exception.SeatNotFoundException
 import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
 import io.hhplus.concertreservationservice.domain.concert.repository.SeatReservationRepository
+import io.hhplus.concertreservationservice.domain.concert.service.ReservationService
+import io.hhplus.concertreservationservice.domain.concert.service.request.CreateReserveSeatCommand
 import io.hhplus.concertreservationservice.domain.payment.PaymentStatus
+import io.hhplus.concertreservationservice.domain.payment.service.response.ProcessPaymentInfo
 import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import io.hhplus.concertreservationservice.domain.reservation.exception.AlreadyReservedException
 import io.hhplus.concertreservationservice.domain.user.User

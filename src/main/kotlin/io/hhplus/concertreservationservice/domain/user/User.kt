@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.domain.user
 
-import io.hhplus.concertreservationservice.domain.Money
+import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.infrastructure.persistence.BaseEntity
 import jakarta.persistence.AttributeOverride
 import jakarta.persistence.AttributeOverrides

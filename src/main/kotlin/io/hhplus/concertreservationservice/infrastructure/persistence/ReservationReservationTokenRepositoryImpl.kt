@@ -1,9 +1,9 @@
 package io.hhplus.concertreservationservice.infrastructure.persistence
 
-import io.hhplus.concertreservationservice.application.service.token.request.TokenStatusCommand
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.token.TokenStatus
 import io.hhplus.concertreservationservice.domain.token.repository.ReservationTokenRepository
+import io.hhplus.concertreservationservice.domain.token.service.request.TokenStatusCommand
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository

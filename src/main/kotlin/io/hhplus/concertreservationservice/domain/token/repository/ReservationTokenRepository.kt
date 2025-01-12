@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.domain.token.repository
 
-import io.hhplus.concertreservationservice.application.service.token.request.TokenStatusCommand
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.token.TokenStatus
+import io.hhplus.concertreservationservice.domain.token.service.request.TokenStatusCommand
 import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 
