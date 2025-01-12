@@ -12,7 +12,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.util.Optional
 
 class BalanceServiceTest : BehaviorSpec({
 
@@ -33,7 +32,7 @@ class BalanceServiceTest : BehaviorSpec({
 
     given("잔액 충전 요청이 있을 때") {
 
-        every { userRepository.getUserByIdWithLock(userId) } returns Optional.of(user)
+        every { userRepository.getUserByIdWithLock(userId) } returns user
         every { userRepository.save(any()) } returns
             User(
                 id = userId,
@@ -59,7 +58,7 @@ class BalanceServiceTest : BehaviorSpec({
 
         given("사용자가 존재하지 않으면") {
 
-            every { userRepository.getUserByIdWithLock(userId) } returns Optional.empty()
+            every { userRepository.getUserByIdWithLock(userId) } returns null
 
             `when`("잔액 충전 작업을 실행하면") {
 
@@ -77,7 +76,7 @@ class BalanceServiceTest : BehaviorSpec({
 
     given("잔액 조회 요청이 있을 때") {
 
-        every { userRepository.getUserById(userId) } returns Optional.of(user)
+        every { userRepository.getUser(userId) } returns user
 
         val command = FetchBalanceCommand(userId)
 
@@ -93,7 +92,7 @@ class BalanceServiceTest : BehaviorSpec({
 
         given("사용자가 존재하지 않으면") {
 
-            every { userRepository.getUserById(userId) } returns Optional.empty()
+            every { userRepository.getUser(userId) } returns null
 
             `when`("잔액 조회 작업을 실행하면") {
 

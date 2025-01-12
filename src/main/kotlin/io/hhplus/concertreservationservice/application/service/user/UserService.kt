@@ -25,8 +25,6 @@ class UserService(
     }
 
     fun getUser(id: Long): User {
-        return userRepository.getUserById(id).orElseThrow {
-            throw UserNotFoundException(id)
-        }
+        return userRepository.getUser(id) ?: throw UserNotFoundException(id)
     }
 }

@@ -23,8 +23,9 @@ class ReservationService(
 ) {
     fun validateReservation(reservationId: Long): SeatReservation {
         val reservation =
-            reservationRepository.findReservationWithLock(reservationId)
-                .orElseThrow { ReservationNotFoundException(reservationId) }
+            reservationRepository.findReservationWithLock(reservationId) ?: throw ReservationNotFoundException(
+                reservationId,
+            )
 
         if (!reservation.isReserved() || reservation.isExpired()) {
             throw InvalidReservationStateException(reservation.id)
@@ -49,15 +50,13 @@ class ReservationService(
         // 좌석 예약 유무 확인
         val reservedSeat = reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId)
 
-        if (reservedSeat.isPresent) {
+        if (reservedSeat != null) {
             throw AlreadyReservedException(command.seatNo)
         }
 
         val seat =
             seatRepository.getSeatForReservationWithLock(ReserveSeatCommand(command.scheduleId, command.seatNo))
-                .orElseThrow {
-                    throw SeatNotFoundException()
-                }
+                ?: throw SeatNotFoundException()
 
         val seatReservation =
             SeatReservation(

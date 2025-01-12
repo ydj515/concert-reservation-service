@@ -29,7 +29,7 @@ import java.util.concurrent.Executors
 class BalanceUseCaseTest
     @Autowired
     constructor(
-        private val balanceUsecase: BalanceUseCase,
+        private val balanceUseCase: BalanceUseCase,
         private val balanceService: BalanceService,
         private val tokenProvider: TokenProvider,
         private val userJpaRepository: UserJpaRepository,
@@ -60,8 +60,8 @@ class BalanceUseCaseTest
                 val initialBalance = balanceService.getBalance(FetchBalanceCommand(user.id)).amount.amount
 
                 `when`("잔액을 충전하고 조회하면") {
-                    balanceUsecase.chargeBalance(ChargeBalanceCriteria(Money(chargeAmount), token))
-                    val fetchResult = balanceUsecase.getBalance(FetchBalanceCriteria(token))
+                    balanceUseCase.chargeBalance(ChargeBalanceCriteria(Money(chargeAmount), token))
+                    val fetchResult = balanceUseCase.getBalance(FetchBalanceCriteria(token))
 
                     then("잔액에 충전 금액이 반영된다") {
                         fetchResult.balance.amount shouldBe initialBalance + chargeAmount
@@ -75,7 +75,7 @@ class BalanceUseCaseTest
                 `when`("잔액 조회를 시도하면") {
                     then("예외가 발생한다") {
                         shouldThrow<TokenNotFoundException> {
-                            balanceUsecase.getBalance(FetchBalanceCriteria(invalidToken))
+                            balanceUseCase.getBalance(FetchBalanceCriteria(invalidToken))
                         }
                     }
                 }
@@ -107,7 +107,7 @@ class BalanceUseCaseTest
                     for (i in 1..threadCount) {
                         executor.submit {
                             try {
-                                balanceUsecase.chargeBalance(ChargeBalanceCriteria(Money(chargeAmount), token))
+                                balanceUseCase.chargeBalance(ChargeBalanceCriteria(Money(chargeAmount), token))
                             } finally {
                                 latch.countDown()
                             }
@@ -117,7 +117,7 @@ class BalanceUseCaseTest
                     latch.await()
                     executor.shutdown()
 
-                    val finalBalance = balanceUsecase.getBalance(FetchBalanceCriteria(token)).balance
+                    val finalBalance = balanceUseCase.getBalance(FetchBalanceCriteria(token)).balance
 
                     then("충전 요청의 총합이 최종 잔액에 반영된다") {
                         finalBalance.amount shouldBe initialBalance + (chargeAmount * threadCount)

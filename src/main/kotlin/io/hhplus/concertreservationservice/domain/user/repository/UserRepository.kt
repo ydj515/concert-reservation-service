@@ -1,12 +1,11 @@
 package io.hhplus.concertreservationservice.domain.user.repository
 
 import io.hhplus.concertreservationservice.domain.user.User
-import java.util.Optional
 
 interface UserRepository {
-    fun getUserById(id: Long): Optional<User>
+    fun getUser(id: Long): User?
 
-    fun getUserByIdWithLock(id: Long): Optional<User>
+    fun getUserByIdWithLock(id: Long): User?
 
     fun save(user: User): User
 

@@ -40,5 +40,5 @@ interface SeatJpaRepository : JpaRepository<Seat, Long> {
           AND ss.schedule.id = :scheduleId
         """
     )
-    fun findByNoAndScheduleSeat_Schedule_Id(seatNo: Int, scheduleId: Long): Optional<Seat>
+    fun findByNoAndScheduleSeat_Schedule_Id(seatNo: Int, scheduleId: Long): Seat?
 }

@@ -10,7 +10,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import java.time.LocalDateTime
-import java.util.Optional
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -59,7 +58,7 @@ class TokenServiceTest : BehaviorSpec({
                 userId = 1L,
             )
 
-        every { reservationTokenRepository.getToken(command) } returns Optional.of(token)
+        every { reservationTokenRepository.getToken(command) } returns token
 
         `when`("토큰을 조회하면") {
             val result = tokenService.getToken(command)
@@ -76,7 +75,7 @@ class TokenServiceTest : BehaviorSpec({
         }
 
         `when`("없는 토큰을 조회하면") {
-            every { reservationTokenRepository.getToken(command) } returns Optional.empty()
+            every { reservationTokenRepository.getToken(command) } returns null
 
             then("예외가 발생해야 한다") {
                 assertFailsWith<TokenNotFoundException> {

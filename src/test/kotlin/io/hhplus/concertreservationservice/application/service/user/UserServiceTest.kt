@@ -9,7 +9,6 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.util.Optional
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -51,7 +50,7 @@ class UserServiceTest : BehaviorSpec({
         val userId = 1L
         val user = User(id = userId, name = "길길", balance = Money(100))
 
-        every { userRepository.getUserById(userId) } returns Optional.of(user)
+        every { userRepository.getUser(userId) } returns user
 
         `when`("사용자 정보를 조회하면") {
             val result = userService.getUser(userId)
@@ -62,12 +61,12 @@ class UserServiceTest : BehaviorSpec({
             }
 
             then("사용자 조회 메서드가 호출되어야 한다") {
-                verify(exactly = 1) { userRepository.getUserById(userId) }
+                verify(exactly = 1) { userRepository.getUser(userId) }
             }
         }
 
         `when`("존재하지 않는 사용자 정보를 조회하면") {
-            every { userRepository.getUserById(userId) } returns Optional.empty()
+            every { userRepository.getUser(userId) } returns null
 
             then("UserNotFoundException이 발생해야 한다") {
                 assertFailsWith<UserNotFoundException> {

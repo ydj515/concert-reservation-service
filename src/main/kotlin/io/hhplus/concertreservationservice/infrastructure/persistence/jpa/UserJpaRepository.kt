@@ -10,5 +10,5 @@ import java.util.Optional
 interface UserJpaRepository : JpaRepository<User, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT u FROM User u WHERE u.id = :id")
-    fun findByIdWithLock(id: Long): Optional<User>
+    fun findByIdWithLock(id: Long): User?
 }

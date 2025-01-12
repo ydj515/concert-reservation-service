@@ -30,9 +30,7 @@ class TokenService(
 
     fun getToken(command: TokenStatusCommand): TokenStatusInfo {
         val reservationToken =
-            reservationTokenRepository.getToken(command).orElseThrow {
-                TokenNotFoundException(command.token)
-            }
+            reservationTokenRepository.getToken(command) ?: throw TokenNotFoundException(command.token)
 
         return reservationToken.toReservationToken()
     }

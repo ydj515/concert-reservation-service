@@ -2,7 +2,6 @@ package io.hhplus.concertreservationservice.domain.concert.repository
 
 import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import java.time.LocalDateTime
-import java.util.Optional
 
 interface SeatReservationRepository {
     fun createReservation(seatReservation: SeatReservation): SeatReservation
@@ -10,9 +9,9 @@ interface SeatReservationRepository {
     fun findReservedSeatWithLock(
         seatNo: Int,
         scheduleId: Long,
-    ): Optional<SeatReservation>
+    ): SeatReservation?
 
-    fun findReservationWithLock(reservationId: Long): Optional<SeatReservation>
+    fun findReservationWithLock(reservationId: Long): SeatReservation?
 
     fun saveReservation(reservation: SeatReservation): SeatReservation
 

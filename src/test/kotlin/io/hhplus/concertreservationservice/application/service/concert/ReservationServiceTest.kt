@@ -25,7 +25,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
-import java.util.Optional
 
 class ReservationServiceTest : BehaviorSpec({
 
@@ -65,7 +64,7 @@ class ReservationServiceTest : BehaviorSpec({
                 paymentId = null,
             )
 
-        every { reservationRepository.findReservationWithLock(reservationId) } returns Optional.of(reservation)
+        every { reservationRepository.findReservationWithLock(reservationId) } returns reservation
 
         `when`("유효한 예약이 있을 때") {
             val result = reservationService.validateReservation(reservationId)
@@ -76,7 +75,7 @@ class ReservationServiceTest : BehaviorSpec({
         }
 
         `when`("예약이 유효하지 않을 때") {
-            every { reservationRepository.findReservationWithLock(reservationId) } returns Optional.empty()
+            every { reservationRepository.findReservationWithLock(reservationId) } returns null
 
             then("예약이 없다는 예외가 발생한다") {
                 assertThrows<ReservationNotFoundException> {
@@ -117,10 +116,9 @@ class ReservationServiceTest : BehaviorSpec({
             )
 
         val seat = givenSeat
-        val reservedSeat = Optional.empty<SeatReservation>()
 
-        every { reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId) } returns reservedSeat
-        every { seatRepository.getSeatForReservationWithLock(any()) } returns Optional.of(seat)
+        every { reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId) } returns null
+        every { seatRepository.getSeatForReservationWithLock(any()) } returns seat
         every { reservationRepository.createReservation(any()) } returns
             SeatReservation(
                 id = 1L,
@@ -138,11 +136,14 @@ class ReservationServiceTest : BehaviorSpec({
         }
 
         `when`("이미 예약된 좌석을 예약할 때") {
-            val reservedSeat =
-                Optional.of(
-                    SeatReservation(id = 1L, user = command.user, seat = seat, paymentId = null),
+            val reservedSeat = SeatReservation(id = 1L, user = command.user, seat = seat, paymentId = null)
+
+            every {
+                reservationRepository.findReservedSeatWithLock(
+                    command.seatNo,
+                    command.scheduleId,
                 )
-            every { reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId) } returns reservedSeat
+            } returns reservedSeat
 
             then("이미 예약된 좌석이라는 예외가 발생한다") {
                 assertThrows<AlreadyReservedException> {
@@ -152,8 +153,8 @@ class ReservationServiceTest : BehaviorSpec({
         }
 
         `when`("존재하지 않는 좌석을 예약할 때") {
-            every { reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId) } returns reservedSeat
-            every { seatRepository.getSeatForReservationWithLock(any()) } returns Optional.empty()
+            every { reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId) } returns null
+            every { seatRepository.getSeatForReservationWithLock(any()) } returns null
 
             then("좌석을 찾을 수 없다는 예외가 발생한다") {
                 assertThrows<SeatNotFoundException> {

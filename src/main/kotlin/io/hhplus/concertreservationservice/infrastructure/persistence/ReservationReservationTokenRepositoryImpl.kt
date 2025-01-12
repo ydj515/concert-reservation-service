@@ -8,7 +8,6 @@ import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.Reserv
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
-import java.util.Optional
 
 @Repository
 class ReservationReservationTokenRepositoryImpl(
@@ -18,7 +17,7 @@ class ReservationReservationTokenRepositoryImpl(
         return reservationTokenJpaRepository.save(token)
     }
 
-    override fun getToken(command: TokenStatusCommand): Optional<ReservationToken> {
+    override fun getToken(command: TokenStatusCommand): ReservationToken? {
         return reservationTokenJpaRepository.findByToken(command.token)
     }
 

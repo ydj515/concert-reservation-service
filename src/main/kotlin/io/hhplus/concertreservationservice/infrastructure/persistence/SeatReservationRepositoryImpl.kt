@@ -5,7 +5,6 @@ import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
-import java.util.Optional
 
 @Repository
 class SeatReservationRepositoryImpl(
@@ -18,11 +17,11 @@ class SeatReservationRepositoryImpl(
     override fun findReservedSeatWithLock(
         seatNo: Int,
         scheduleId: Long,
-    ): Optional<SeatReservation> {
+    ): SeatReservation? {
         return seatReservationJpaRepository.findReservedSeatBySeatNoAndScheduleId(seatNo, scheduleId)
     }
 
-    override fun findReservationWithLock(reservationId: Long): Optional<SeatReservation> {
+    override fun findReservationWithLock(reservationId: Long): SeatReservation? {
         return seatReservationJpaRepository.findReservationWithLock(reservationId)
     }
 

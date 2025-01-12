@@ -11,8 +11,6 @@ class SeatService(
     private val seatRepository: SeatRepository,
 ) {
     fun getSeatForReservationWithLock(command: ReserveSeatCommand): Seat {
-        return seatRepository.getSeatForReservationWithLock(command).orElseThrow {
-            throw SeatNotFoundException()
-        }
+        return seatRepository.getSeatForReservationWithLock(command) ?: throw SeatNotFoundException()
     }
 }

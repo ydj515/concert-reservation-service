@@ -6,7 +6,6 @@ import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatJpaRepository
 import org.springframework.stereotype.Repository
-import java.util.Optional
 
 @Repository
 class SeatRepositoryImpl(
@@ -16,7 +15,7 @@ class SeatRepositoryImpl(
         return seatJpaRepository.findAvailableSeatsByConcertAndSchedule(command)
     }
 
-    override fun getSeatForReservationWithLock(command: ReserveSeatCommand): Optional<Seat> {
+    override fun getSeatForReservationWithLock(command: ReserveSeatCommand): Seat? {
         return seatJpaRepository.findByNoAndScheduleSeat_Schedule_Id(command.seatNo, command.scheduleId)
     }
 }

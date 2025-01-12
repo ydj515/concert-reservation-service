@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 import java.util.Optional
 
 interface ReservationTokenJpaRepository : JpaRepository<ReservationToken, Long> {
-    fun findByToken(token: String): Optional<ReservationToken>
+    fun findByToken(token: String): ReservationToken?
     fun findByExpiredAtBefore(currentTime: LocalDateTime): List<ReservationToken>
 
     @Query(

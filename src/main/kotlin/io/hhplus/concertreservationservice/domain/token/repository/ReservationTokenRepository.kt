@@ -5,12 +5,11 @@ import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.token.TokenStatus
 import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
-import java.util.Optional
 
 interface ReservationTokenRepository {
     fun saveToken(token: ReservationToken): ReservationToken
 
-    fun getToken(command: TokenStatusCommand): Optional<ReservationToken>
+    fun getToken(command: TokenStatusCommand): ReservationToken?
 
     fun getExpiredToken(currentTime: LocalDateTime): List<ReservationToken>
 
