@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.presentation.controller.concert
 
-import io.hhplus.concertreservationservice.application.facade.concert.ConcertFacade
-import io.hhplus.concertreservationservice.application.facade.concert.request.SeatReserveCriteria
-import io.hhplus.concertreservationservice.application.facade.concert.response.toSeatReserveResponse
+import io.hhplus.concertreservationservice.application.usecase.concert.ConcertUseCase
+import io.hhplus.concertreservationservice.application.usecase.concert.request.SeatReserveCriteria
+import io.hhplus.concertreservationservice.application.usecase.concert.response.toSeatReserveResponse
 import io.hhplus.concertreservationservice.common.response.ApiResponse
 import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/concert")
 class ConcertReservationController(
-    private val concertFacade: ConcertFacade,
+    private val concertUseCase: ConcertUseCase,
 ) {
     @Operation(
         summary = "콘서트 스케쥴 좌석 예약",
@@ -44,7 +44,7 @@ class ConcertReservationController(
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
     ): ResponseEntity<SuccessResponse<ReservationSeatResponse>> {
         val criteria = SeatReserveCriteria(concertId, scheduleId, reservationRequest.seatNo, token)
-        val result = concertFacade.reserveSeat(criteria)
+        val result = concertUseCase.reserveSeat(criteria)
         return ApiResponse.success(result.toSeatReserveResponse())
     }
 }

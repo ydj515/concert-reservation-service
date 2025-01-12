@@ -1,10 +1,10 @@
 package io.hhplus.concertreservationservice.presentation.controller.token
 
-import io.hhplus.concertreservationservice.application.facade.token.TokenFacade
-import io.hhplus.concertreservationservice.application.facade.token.request.CreateReservationTokenCriteria
-import io.hhplus.concertreservationservice.application.facade.token.request.ReservationTokenStatusCriteria
-import io.hhplus.concertreservationservice.application.facade.token.response.toReservationTokenCreateResponse
-import io.hhplus.concertreservationservice.application.facade.token.response.toReservationTokenStatusResponse
+import io.hhplus.concertreservationservice.application.usecase.token.TokenUseCase
+import io.hhplus.concertreservationservice.application.usecase.token.request.CreateReservationTokenCriteria
+import io.hhplus.concertreservationservice.application.usecase.token.request.ReservationTokenStatusCriteria
+import io.hhplus.concertreservationservice.application.usecase.token.response.toReservationTokenCreateResponse
+import io.hhplus.concertreservationservice.application.usecase.token.response.toReservationTokenStatusResponse
 import io.hhplus.concertreservationservice.common.response.ApiResponse
 import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/reservation-token")
 class TokenController(
-    private val tokenFacade: TokenFacade,
+    private val tokenUseCase: TokenUseCase,
 ) {
     @Operation(
         summary = "토큰 발급",
@@ -44,7 +44,7 @@ class TokenController(
         @RequestBody request: ReservationTokenCreateRequest,
     ): ResponseEntity<SuccessResponse<ReservationTokenCreateResponse>> {
         val criteria = CreateReservationTokenCriteria(request.userId)
-        val result = tokenFacade.createToken(criteria)
+        val result = tokenUseCase.createToken(criteria)
         return ApiResponse.success(result.toReservationTokenCreateResponse())
     }
 
@@ -67,7 +67,7 @@ class TokenController(
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
     ): ResponseEntity<SuccessResponse<ReservationTokenStatusResponse>> {
         val criteria = ReservationTokenStatusCriteria(token)
-        val result = tokenFacade.getTokenStatus(criteria)
+        val result = tokenUseCase.getTokenStatus(criteria)
         return ApiResponse.success(result.toReservationTokenStatusResponse())
     }
 }

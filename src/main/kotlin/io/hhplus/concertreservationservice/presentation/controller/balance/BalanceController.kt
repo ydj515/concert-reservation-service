@@ -1,10 +1,10 @@
 package io.hhplus.concertreservationservice.presentation.controller.balance
 
-import io.hhplus.concertreservationservice.application.facade.balance.BalanceFacade
-import io.hhplus.concertreservationservice.application.facade.balance.request.ChargeBalanceCriteria
-import io.hhplus.concertreservationservice.application.facade.balance.request.FetchBalanceCriteria
-import io.hhplus.concertreservationservice.application.facade.balance.response.ChargeBalanceResult
-import io.hhplus.concertreservationservice.application.facade.balance.response.FetchBalanceResult
+import io.hhplus.concertreservationservice.application.usecase.balance.BalanceUseCase
+import io.hhplus.concertreservationservice.application.usecase.balance.request.ChargeBalanceCriteria
+import io.hhplus.concertreservationservice.application.usecase.balance.request.FetchBalanceCriteria
+import io.hhplus.concertreservationservice.application.usecase.balance.response.ChargeBalanceResult
+import io.hhplus.concertreservationservice.application.usecase.balance.response.FetchBalanceResult
 import io.hhplus.concertreservationservice.common.response.ApiResponse
 import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.domain.Money
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/balance")
 class BalanceController(
-    private val balanceFacade: BalanceFacade,
+    private val balanceUsecase: BalanceUseCase,
 ) {
     @Operation(
         summary = "잔액 충전",
@@ -44,7 +44,7 @@ class BalanceController(
         @RequestBody balanceRequest: BalanceChargeRequest,
     ): ResponseEntity<SuccessResponse<ChargeBalanceResult>> {
         val criteria = ChargeBalanceCriteria(Money(balanceRequest.amount), token)
-        val result = balanceFacade.chargeBalance(criteria)
+        val result = balanceUsecase.chargeBalance(criteria)
         return ApiResponse.success(result)
     }
 
@@ -67,7 +67,7 @@ class BalanceController(
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
     ): ResponseEntity<SuccessResponse<FetchBalanceResult>> {
         val criteria = FetchBalanceCriteria(token)
-        val result = balanceFacade.getBalance(criteria)
+        val result = balanceUsecase.getBalance(criteria)
         return ApiResponse.success(result)
     }
 }

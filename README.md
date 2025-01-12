@@ -45,7 +45,8 @@
 
 ## API Specs
 
-https://app.swaggerhub.com/apis/dongjinyoo/reservation-concert/1.0.0
+[swagger hub][swagger] 에서 확인 가능합니다. 
+
 
 ### 유저 대기열 토큰 기능
 
@@ -88,10 +89,10 @@ src/
 │   ├── kotlin/
 │   │   └── io.hhplus.concertreservationservice/
 │   │       ├── application/         <-- Application 관련
-│   │       │   ├── facade/          <-- Facade
-│   │       │   │     └── xxxFacade  <-- usecase관련 facade
+│   │       │   ├── usecase/         <-- Usecase
+│   │       │   │     └── xxxUseCase <-- usecase관련 facade
 │   │       │   ├── service/         <-- Service
-│   │       │   │     └── xxxService <-- 도메인 관련 service
+│   │       │   │     └── xxxService <-- usecase관련 service
 │   │       ├── config/              <-- Configuration 및 설정 클래스들
 │   │       ├── common/              <-- 공통 클래스
 │   │       │   ├── exception/       <-- 공통 서비스 Exception 정의
@@ -99,7 +100,8 @@ src/
 │   │       ├── domain/              <-- 도메인 관련
 │   │       │   ├── balance/         <-- 잔고 관련
 │   │       │   │   ├── exception/   <-- 잔고 관련 Exception
-│   │       │   │   └── repository/  <-- 잔고 관련 Repository
+│   │       │   │   ├── repository/  <-- 잔고 관련 Repository
+│   │       │   │   └── service/     <-- 잔고 관련 Service
 │   │       │   ├── concert/         <-- 콘서트, 스케줄 관련
 │   │       │   ├── payment/         <-- 결제 관련
 │   │       │   └── token/           <-- 토큰 관련
@@ -110,7 +112,7 @@ src/
 │   │       │       ├── jpa/         <-- JPA Repository
 │   │       │       │   └── XXXJpaRepository  <-- JpaRepository 상속받은 Repository Interface
 │   │       │       └── xxxRepositoryImpl/... <-- Repository 구현체
-│   │       └── presentation/          <-- API 관련
+│   │       └── presentation/        <-- API 관련
 │   │           ├── advice/          <-- Controller Advice
 │   │           │   └── GlobalExceptionHandler  <-- Global Exception Handler
 │   │           └── controller/      <-- Controller
@@ -124,3 +126,5 @@ src/
 [kotest]: https://kotest.io/docs/quickstart
 
 [mockk]: https://mockk.io/
+
+[swagger] : https://app.swaggerhub.com/apis/dongjinyoo/reservation-concert/1.0.0

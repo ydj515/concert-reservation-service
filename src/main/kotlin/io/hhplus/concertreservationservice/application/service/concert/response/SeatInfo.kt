@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.application.service.concert.response
 
-import io.hhplus.concertreservationservice.application.facade.concert.response.SearchAvailSeatResult
+import io.hhplus.concertreservationservice.application.usecase.concert.response.SearchAvailSeatResult
 
 data class SeatInfo(
     val no: Int,

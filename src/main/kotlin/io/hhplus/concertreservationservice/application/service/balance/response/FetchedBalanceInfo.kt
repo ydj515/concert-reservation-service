@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.application.service.balance.response
 
-import io.hhplus.concertreservationservice.application.facade.balance.response.FetchBalanceResult
+import io.hhplus.concertreservationservice.application.usecase.balance.response.FetchBalanceResult
 import io.hhplus.concertreservationservice.domain.Money
 
 data class FetchedBalanceInfo(
