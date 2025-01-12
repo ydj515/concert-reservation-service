@@ -45,6 +45,8 @@
 
 ## API Specs
 
+https://app.swaggerhub.com/apis/dongjinyoo/reservation-concert/1.0.0
+
 ### 유저 대기열 토큰 기능
 
 - 서비스를 이용할 토큰을 발급받는 API를 작성합니다.
