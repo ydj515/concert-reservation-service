@@ -27,4 +27,13 @@ class User(
         AttributeOverride(name = "amount", column = Column(name = "balance")),
     )
     var balance: Money = Money(0),
-) : BaseEntity()
+) : BaseEntity() {
+    fun chargeMoney(amount: Money) {
+        require(amount.amount > 0) { "충전 금액은 0원 이상이어야 합니다." }
+        this.balance = this.balance.add(amount)
+    }
+
+    fun deductMoney(amount: Money) {
+        this.balance = this.balance.subtract(amount)
+    }
+}

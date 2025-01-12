@@ -15,10 +15,9 @@ class BalanceService(
 ) {
     @Transactional
     fun chargeBalance(command: ChargeBalanceCommand): ChargedBalanceInfo {
-        val user =
-            userRepository.getUserByIdWithLock(command.userId) ?: throw UserNotFoundException(command.userId)
+        val user = userRepository.getUserByIdWithLock(command.userId) ?: throw UserNotFoundException(command.userId)
 
-        user.balance = user.balance.add(command.amount)
+        user.chargeMoney(command.money)
         val savedUser = userRepository.save(user)
         return ChargedBalanceInfo(
             savedUser.id,
@@ -28,8 +27,7 @@ class BalanceService(
     }
 
     fun getBalance(command: FetchBalanceCommand): FetchedBalanceInfo {
-        val user =
-            userRepository.getUser(command.userId) ?: throw UserNotFoundException(command.userId)
+        val user = userRepository.getUser(command.userId) ?: throw UserNotFoundException(command.userId)
 
         return FetchedBalanceInfo(
             user.id,

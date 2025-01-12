@@ -44,15 +44,12 @@ class ReservationService(
         reservationRepository.saveReservation(reservation)
     }
 
-    //    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Transactional
     fun createReservationInfo(command: CreateReserveSeatCommand): CreateReservedSeatInfo {
         // 좌석 예약 유무 확인
-        val reservedSeat = reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId)
-
-        if (reservedSeat != null) {
-            throw AlreadyReservedException(command.seatNo)
-        }
+        val reservedSeat =
+            reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId)
+                ?.let { throw AlreadyReservedException(command.seatNo) }
 
         val seat =
             seatRepository.getSeatForReservationWithLock(ReserveSeatCommand(command.scheduleId, command.seatNo))
@@ -64,6 +61,7 @@ class ReservationService(
                 seat = seat,
                 paymentId = null,
             )
+
         val savedReservation = reservationRepository.createReservation(seatReservation)
 
         return savedReservation.toCreateReservedSeatInfo(seat.no)

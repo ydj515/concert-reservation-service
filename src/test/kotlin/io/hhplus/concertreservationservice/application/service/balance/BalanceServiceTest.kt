@@ -48,7 +48,7 @@ class BalanceServiceTest : BehaviorSpec({
 
             then("충전된 잔액이 반환된다") {
                 result.userId shouldBe userId
-                result.amount shouldBe newBalance
+                result.money shouldBe newBalance
             }
 
             then("사용자의 잔액이 업데이트되고 저장된다") {

@@ -6,13 +6,13 @@ import io.hhplus.concertreservationservice.domain.Money
 data class ChargedBalanceInfo(
     val userId: Long,
     val userName: String,
-    val amount: Money,
+    val money: Money,
 )
 
 fun ChargedBalanceInfo.toChargeBalanceResult(): ChargeBalanceResult {
     return ChargeBalanceResult(
         userId = this.userId,
         userName = this.userName,
-        balance = this.amount,
+        balance = this.money,
     )
 }
