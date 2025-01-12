@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.domain.token.extension
 
-import io.hhplus.concertreservationservice.application.service.token.response.CreateTokenInfo
-import io.hhplus.concertreservationservice.application.service.token.response.TokenStatusInfo
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
+import io.hhplus.concertreservationservice.domain.token.service.response.CreateTokenInfo
+import io.hhplus.concertreservationservice.domain.token.service.response.TokenStatusInfo
 
 fun ReservationToken.toCreateTokenInfo(): CreateTokenInfo {
     return CreateTokenInfo(

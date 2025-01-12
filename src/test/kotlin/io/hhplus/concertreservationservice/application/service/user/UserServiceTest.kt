@@ -1,10 +1,11 @@
 package io.hhplus.concertreservationservice.application.service.user
 
-import io.hhplus.concertreservationservice.domain.Money
+import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.domain.user.exception.InsufficientBalanceException
 import io.hhplus.concertreservationservice.domain.user.exception.UserNotFoundException
 import io.hhplus.concertreservationservice.domain.user.repository.UserRepository
+import io.hhplus.concertreservationservice.domain.user.service.UserService
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk

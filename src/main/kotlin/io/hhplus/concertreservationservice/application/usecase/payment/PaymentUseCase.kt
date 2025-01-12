@@ -1,15 +1,15 @@
 package io.hhplus.concertreservationservice.application.usecase.payment
 
-import io.hhplus.concertreservationservice.application.service.concert.ReservationService
-import io.hhplus.concertreservationservice.application.service.payment.PaymentService
-import io.hhplus.concertreservationservice.application.service.payment.request.ProcessPaymentCommand
-import io.hhplus.concertreservationservice.application.service.payment.response.toProcessPaymentResult
-import io.hhplus.concertreservationservice.application.service.token.TokenService
-import io.hhplus.concertreservationservice.application.service.token.request.TokenStatusCommand
-import io.hhplus.concertreservationservice.application.service.user.UserService
 import io.hhplus.concertreservationservice.application.usecase.payment.request.ProcessPaymentCriteria
 import io.hhplus.concertreservationservice.application.usecase.payment.response.ProcessPaymentResult
-import io.hhplus.concertreservationservice.domain.Money
+import io.hhplus.concertreservationservice.domain.balance.Money
+import io.hhplus.concertreservationservice.domain.concert.service.ReservationService
+import io.hhplus.concertreservationservice.domain.payment.service.PaymentService
+import io.hhplus.concertreservationservice.domain.payment.service.request.ProcessPaymentCommand
+import io.hhplus.concertreservationservice.domain.payment.service.response.toProcessPaymentResult
+import io.hhplus.concertreservationservice.domain.token.service.TokenService
+import io.hhplus.concertreservationservice.domain.token.service.request.TokenStatusCommand
+import io.hhplus.concertreservationservice.domain.user.service.UserService
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 

@@ -1,13 +1,12 @@
 package io.hhplus.concertreservationservice.infrastructure.persistence.jpa
 
-import io.hhplus.concertreservationservice.application.service.concert.request.SearchAvailSeatCommand
+import io.hhplus.concertreservationservice.domain.concert.service.request.SearchAvailSeatCommand
 import io.hhplus.concertreservationservice.domain.concert.Seat
 import jakarta.persistence.LockModeType
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Lock
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import java.util.Optional
 
 interface SeatJpaRepository : JpaRepository<Seat, Long> {
     @Query(

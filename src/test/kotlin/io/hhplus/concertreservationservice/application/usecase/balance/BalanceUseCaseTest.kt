@@ -1,10 +1,10 @@
 package io.hhplus.concertreservationservice.application.usecase.balance
 
-import io.hhplus.concertreservationservice.application.service.balance.BalanceService
-import io.hhplus.concertreservationservice.application.service.balance.request.FetchBalanceCommand
 import io.hhplus.concertreservationservice.application.usecase.balance.request.ChargeBalanceCriteria
 import io.hhplus.concertreservationservice.application.usecase.balance.request.FetchBalanceCriteria
-import io.hhplus.concertreservationservice.domain.Money
+import io.hhplus.concertreservationservice.domain.balance.Money
+import io.hhplus.concertreservationservice.domain.balance.service.BalanceService
+import io.hhplus.concertreservationservice.domain.balance.service.request.FetchBalanceCommand
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.token.exception.TokenNotFoundException
 import io.hhplus.concertreservationservice.domain.user.User

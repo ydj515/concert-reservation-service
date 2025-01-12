@@ -1,7 +1,7 @@
 package io.hhplus.concertreservationservice.domain.reservation
 
 import io.hhplus.concertreservationservice.domain.DateRange
-import io.hhplus.concertreservationservice.domain.Money
+import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
 import io.hhplus.concertreservationservice.domain.concert.Place
 import io.hhplus.concertreservationservice.domain.concert.Schedule

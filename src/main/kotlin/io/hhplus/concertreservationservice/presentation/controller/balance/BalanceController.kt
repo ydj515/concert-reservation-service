@@ -7,7 +7,7 @@ import io.hhplus.concertreservationservice.application.usecase.balance.response.
 import io.hhplus.concertreservationservice.application.usecase.balance.response.FetchBalanceResult
 import io.hhplus.concertreservationservice.common.response.ApiResponse
 import io.hhplus.concertreservationservice.common.response.SuccessResponse
-import io.hhplus.concertreservationservice.domain.Money
+import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.balance.request.BalanceChargeRequest
 import io.swagger.v3.oas.annotations.Operation
