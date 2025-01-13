@@ -1,9 +1,8 @@
-package io.hhplus.concertreservationservice.application.service.token
+package io.hhplus.concertreservationservice.domain.token.service
 
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.token.exception.TokenNotFoundException
 import io.hhplus.concertreservationservice.domain.token.repository.ReservationTokenRepository
-import io.hhplus.concertreservationservice.domain.token.service.TokenService
 import io.hhplus.concertreservationservice.domain.token.service.request.CreateTokenCommand
 import io.hhplus.concertreservationservice.domain.token.service.request.TokenStatusCommand
 import io.kotest.core.spec.style.BehaviorSpec

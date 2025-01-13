@@ -1,10 +1,9 @@
-package io.hhplus.concertreservationservice.application.service.payment
+package io.hhplus.concertreservationservice.domain.payment.service
 
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.payment.Payment
 import io.hhplus.concertreservationservice.domain.payment.PaymentStatus
 import io.hhplus.concertreservationservice.domain.payment.repository.PaymentRepository
-import io.hhplus.concertreservationservice.domain.payment.service.PaymentService
 import io.hhplus.concertreservationservice.domain.payment.service.request.ProcessPaymentCommand
 import io.hhplus.concertreservationservice.domain.user.User
 import io.kotest.core.spec.style.BehaviorSpec

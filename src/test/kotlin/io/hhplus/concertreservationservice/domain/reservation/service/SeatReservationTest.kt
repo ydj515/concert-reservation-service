@@ -1,4 +1,4 @@
-package io.hhplus.concertreservationservice.domain.reservation
+package io.hhplus.concertreservationservice.domain.reservation.service
 
 import io.hhplus.concertreservationservice.domain.DateRange
 import io.hhplus.concertreservationservice.domain.balance.Money
@@ -8,6 +8,8 @@ import io.hhplus.concertreservationservice.domain.concert.Schedule
 import io.hhplus.concertreservationservice.domain.concert.ScheduleSeat
 import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.SeatType
+import io.hhplus.concertreservationservice.domain.reservation.ReservationStatus
+import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import io.hhplus.concertreservationservice.domain.user.User
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

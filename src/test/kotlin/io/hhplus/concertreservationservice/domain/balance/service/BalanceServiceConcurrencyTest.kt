@@ -1,7 +1,6 @@
-package io.hhplus.concertreservationservice.application.service.balance
+package io.hhplus.concertreservationservice.domain.balance.service
 
 import io.hhplus.concertreservationservice.domain.balance.Money
-import io.hhplus.concertreservationservice.domain.balance.service.BalanceService
 import io.hhplus.concertreservationservice.domain.balance.service.request.ChargeBalanceCommand
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.domain.user.repository.UserRepository
