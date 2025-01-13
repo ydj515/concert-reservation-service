@@ -2,14 +2,13 @@ package io.hhplus.concertreservationservice.config
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import java.time.Clock
 import java.time.ZoneId
 
 @Import(ClockConfig::class)
 class ClockConfigTest(
-    @Autowired val clock: Clock,
+    private val clock: Clock,
 ) : FunSpec({
         test("clock 설정을 테스트 한다.") {
             val currentInstant = clock.instant()
