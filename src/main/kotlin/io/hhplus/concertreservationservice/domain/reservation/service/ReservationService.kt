@@ -4,7 +4,7 @@ import io.hhplus.concertreservationservice.domain.concert.exception.InvalidReser
 import io.hhplus.concertreservationservice.domain.concert.exception.InvalidReservationUserException
 import io.hhplus.concertreservationservice.domain.concert.exception.ReservationNotFoundException
 import io.hhplus.concertreservationservice.domain.concert.exception.SeatNotFoundException
-import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
+import io.hhplus.concertreservationservice.domain.concert.repository.ConcertRepository
 import io.hhplus.concertreservationservice.domain.concert.service.request.CreateReserveSeatCommand
 import io.hhplus.concertreservationservice.domain.concert.service.request.ReserveSeatCommand
 import io.hhplus.concertreservationservice.domain.concert.service.request.ValidReservationCommand
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ReservationService(
     private val reservationRepository: SeatReservationRepository,
-    private val seatRepository: SeatRepository,
+    private val concertRepository: ConcertRepository,
 ) {
     fun validateReservation(command: ValidReservationCommand): SeatReservation {
         val reservation =
@@ -60,7 +60,7 @@ class ReservationService(
                 ?.let { throw AlreadyReservedException(command.seatNo) }
 
         val seat =
-            seatRepository.getSeatForReservationWithLock(ReserveSeatCommand(command.scheduleId, command.seatNo))
+            concertRepository.getSeatForReservationWithLock(ReserveSeatCommand(command.scheduleId, command.seatNo))
                 ?: throw SeatNotFoundException()
 
         val seatReservation =

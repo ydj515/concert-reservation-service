@@ -8,7 +8,7 @@ import io.hhplus.concertreservationservice.domain.concert.Schedule
 import io.hhplus.concertreservationservice.domain.concert.ScheduleSeat
 import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.SeatType
-import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
+import io.hhplus.concertreservationservice.domain.concert.repository.ConcertRepository
 import io.hhplus.concertreservationservice.domain.concert.service.request.SearchAvailSeatCommand
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
@@ -18,8 +18,8 @@ import java.time.LocalDate
 
 class ConcertServiceTest : BehaviorSpec({
 
-    val seatRepository = mockk<SeatRepository>()
-    val concertService = ConcertService(seatRepository)
+    val concertRepository = mockk<ConcertRepository>()
+    val concertService = ConcertService(concertRepository)
 
     given("가용 좌석 조회 요청이 있을 때") {
         val command =
@@ -31,7 +31,7 @@ class ConcertServiceTest : BehaviorSpec({
 
         val availableSeats = createSeats()
 
-        every { seatRepository.getAvailableSeats(command) } returns availableSeats
+        every { concertRepository.getAvailableSeats(command) } returns availableSeats
 
         `when`("getAvailableSeats 메소드가 호출되면") {
             val result = concertService.getAvailableSeats(command)
@@ -39,7 +39,7 @@ class ConcertServiceTest : BehaviorSpec({
             then("가용 좌석 목록이 반환된다") {
             }
             then("SeatRepository의 getAvailableSeats 메소드가 호출되었는지 확인") {
-                verify { seatRepository.getAvailableSeats(command) }
+                verify { concertRepository.getAvailableSeats(command) }
             }
         }
     }

@@ -10,7 +10,7 @@ import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.SeatType
 import io.hhplus.concertreservationservice.domain.concert.exception.ReservationNotFoundException
 import io.hhplus.concertreservationservice.domain.concert.exception.SeatNotFoundException
-import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
+import io.hhplus.concertreservationservice.domain.concert.repository.ConcertRepository
 import io.hhplus.concertreservationservice.domain.concert.service.request.CreateReserveSeatCommand
 import io.hhplus.concertreservationservice.domain.concert.service.request.ValidReservationCommand
 import io.hhplus.concertreservationservice.domain.payment.PaymentStatus
@@ -31,8 +31,8 @@ import java.time.LocalDate
 class ReservationServiceTest : BehaviorSpec({
 
     val reservationRepository = mockk<SeatReservationRepository>()
-    val seatRepository = mockk<SeatRepository>()
-    val reservationService = ReservationService(reservationRepository, seatRepository)
+    val concertRepository = mockk<ConcertRepository>()
+    val reservationService = ReservationService(reservationRepository, concertRepository)
 
     val givenSeat =
         Seat(
@@ -121,7 +121,7 @@ class ReservationServiceTest : BehaviorSpec({
         val seat = givenSeat
 
         every { reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId) } returns null
-        every { seatRepository.getSeatForReservationWithLock(any()) } returns seat
+        every { concertRepository.getSeatForReservationWithLock(any()) } returns seat
         every { reservationRepository.createReservation(any()) } returns
             SeatReservation(
                 id = 1L,
@@ -157,7 +157,7 @@ class ReservationServiceTest : BehaviorSpec({
 
         `when`("존재하지 않는 좌석을 예약할 때") {
             every { reservationRepository.findReservedSeatWithLock(command.seatNo, command.scheduleId) } returns null
-            every { seatRepository.getSeatForReservationWithLock(any()) } returns null
+            every { concertRepository.getSeatForReservationWithLock(any()) } returns null
 
             then("좌석을 찾을 수 없다는 예외가 발생한다") {
                 assertThrows<SeatNotFoundException> {
