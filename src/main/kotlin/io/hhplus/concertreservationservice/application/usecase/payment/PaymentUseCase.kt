@@ -3,10 +3,11 @@ package io.hhplus.concertreservationservice.application.usecase.payment
 import io.hhplus.concertreservationservice.application.usecase.payment.request.ProcessPaymentCriteria
 import io.hhplus.concertreservationservice.application.usecase.payment.response.ProcessPaymentResult
 import io.hhplus.concertreservationservice.domain.balance.Money
-import io.hhplus.concertreservationservice.domain.concert.service.ReservationService
+import io.hhplus.concertreservationservice.domain.concert.service.request.ValidReservationCommand
 import io.hhplus.concertreservationservice.domain.payment.service.PaymentService
 import io.hhplus.concertreservationservice.domain.payment.service.request.ProcessPaymentCommand
 import io.hhplus.concertreservationservice.domain.payment.service.response.toProcessPaymentResult
+import io.hhplus.concertreservationservice.domain.reservation.service.ReservationService
 import io.hhplus.concertreservationservice.domain.token.service.TokenService
 import io.hhplus.concertreservationservice.domain.token.service.request.TokenStatusCommand
 import io.hhplus.concertreservationservice.domain.user.service.UserService
@@ -25,11 +26,14 @@ class PaymentUseCase(
         // 토큰 정보 가져오기
         val tokenInfo = tokenService.getToken(TokenStatusCommand(criteria.token))
 
-        // 사용자 get
+        // 사용자 가져오기
         val user = userService.getUser(tokenInfo.userId)
 
-        // 예약 검증
-        val reservation = reservationService.validateReservation(criteria.reservationId)
+        // 예약 검증 및 예약 정보 가져오기
+        val reservation =
+            reservationService.validateReservation(
+                ValidReservationCommand(criteria.reservationId, user.id),
+            )
 
         // 결제 처리
         val paymentInfo =

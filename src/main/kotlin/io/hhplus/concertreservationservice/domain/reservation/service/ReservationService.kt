@@ -1,18 +1,20 @@
-package io.hhplus.concertreservationservice.domain.concert.service
+package io.hhplus.concertreservationservice.domain.reservation.service
 
 import io.hhplus.concertreservationservice.domain.concert.exception.InvalidReservationStateException
+import io.hhplus.concertreservationservice.domain.concert.exception.InvalidReservationUserException
 import io.hhplus.concertreservationservice.domain.concert.exception.ReservationNotFoundException
 import io.hhplus.concertreservationservice.domain.concert.exception.SeatNotFoundException
 import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
-import io.hhplus.concertreservationservice.domain.concert.repository.SeatReservationRepository
 import io.hhplus.concertreservationservice.domain.concert.service.request.CreateReserveSeatCommand
 import io.hhplus.concertreservationservice.domain.concert.service.request.ReserveSeatCommand
+import io.hhplus.concertreservationservice.domain.concert.service.request.ValidReservationCommand
 import io.hhplus.concertreservationservice.domain.concert.service.response.CreateReservedSeatInfo
 import io.hhplus.concertreservationservice.domain.payment.exception.PaymentNotCompletedException
 import io.hhplus.concertreservationservice.domain.payment.service.response.ProcessPaymentInfo
 import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import io.hhplus.concertreservationservice.domain.reservation.exception.AlreadyReservedException
 import io.hhplus.concertreservationservice.domain.reservation.extension.toCreateReservedSeatInfo
+import io.hhplus.concertreservationservice.domain.reservation.repository.SeatReservationRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -21,14 +23,20 @@ class ReservationService(
     private val reservationRepository: SeatReservationRepository,
     private val seatRepository: SeatRepository,
 ) {
-    fun validateReservation(reservationId: Long): SeatReservation {
+    fun validateReservation(command: ValidReservationCommand): SeatReservation {
         val reservation =
-            reservationRepository.findReservationWithLock(reservationId) ?: throw ReservationNotFoundException(
-                reservationId,
+            reservationRepository.findReservationWithLock(command.reservationId) ?: throw ReservationNotFoundException(
+                command.reservationId,
             )
 
-        if (!reservation.isReserved() || reservation.isExpired()) {
-            throw InvalidReservationStateException(reservation.id)
+        with(reservation) {
+            require(user.id == command.userId) {
+                throw InvalidReservationUserException(id, command.userId)
+            }
+
+            require(isReserved() && !isExpired()) {
+                throw InvalidReservationStateException(id)
+            }
         }
 
         return reservation

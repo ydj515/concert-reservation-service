@@ -38,10 +38,9 @@ class ConcertServiceTest : BehaviorSpec({
 
             then("가용 좌석 목록이 반환된다") {
             }
-        }
-
-        then("SeatRepository의 getAvailableSeats 메소드가 호출되었는지 확인") {
-            verify { seatRepository.getAvailableSeats(command) }
+            then("SeatRepository의 getAvailableSeats 메소드가 호출되었는지 확인") {
+                verify { seatRepository.getAvailableSeats(command) }
+            }
         }
     }
 })

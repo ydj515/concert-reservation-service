@@ -9,6 +9,7 @@ import io.hhplus.concertreservationservice.domain.concert.ScheduleSeat
 import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.SeatType
 import io.hhplus.concertreservationservice.domain.concert.service.request.CreateReserveSeatCommand
+import io.hhplus.concertreservationservice.domain.reservation.service.ReservationService
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ConcertJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.PlaceJpaRepository

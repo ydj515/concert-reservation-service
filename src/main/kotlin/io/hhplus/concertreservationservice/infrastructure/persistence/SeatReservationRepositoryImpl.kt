@@ -1,7 +1,7 @@
 package io.hhplus.concertreservationservice.infrastructure.persistence
 
-import io.hhplus.concertreservationservice.domain.concert.repository.SeatReservationRepository
 import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
+import io.hhplus.concertreservationservice.domain.reservation.repository.SeatReservationRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime

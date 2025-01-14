@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.application.job
 
-import io.hhplus.concertreservationservice.domain.concert.repository.SeatReservationRepository
+import io.hhplus.concertreservationservice.domain.reservation.repository.SeatReservationRepository
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.slf4j.LoggerFactory

@@ -11,12 +11,14 @@ import io.hhplus.concertreservationservice.domain.concert.SeatType
 import io.hhplus.concertreservationservice.domain.concert.exception.ReservationNotFoundException
 import io.hhplus.concertreservationservice.domain.concert.exception.SeatNotFoundException
 import io.hhplus.concertreservationservice.domain.concert.repository.SeatRepository
-import io.hhplus.concertreservationservice.domain.concert.repository.SeatReservationRepository
 import io.hhplus.concertreservationservice.domain.concert.service.request.CreateReserveSeatCommand
+import io.hhplus.concertreservationservice.domain.concert.service.request.ValidReservationCommand
 import io.hhplus.concertreservationservice.domain.payment.PaymentStatus
 import io.hhplus.concertreservationservice.domain.payment.service.response.ProcessPaymentInfo
 import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import io.hhplus.concertreservationservice.domain.reservation.exception.AlreadyReservedException
+import io.hhplus.concertreservationservice.domain.reservation.repository.SeatReservationRepository
+import io.hhplus.concertreservationservice.domain.reservation.service.ReservationService
 import io.hhplus.concertreservationservice.domain.user.User
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -63,11 +65,12 @@ class ReservationServiceTest : BehaviorSpec({
                 seat = givenSeat,
                 paymentId = null,
             )
+        val command = ValidReservationCommand(reservationId, reservation.user.id)
 
         every { reservationRepository.findReservationWithLock(reservationId) } returns reservation
 
         `when`("유효한 예약이 있을 때") {
-            val result = reservationService.validateReservation(reservationId)
+            val result = reservationService.validateReservation(command)
 
             then("예약 정보를 반환한다") {
                 result.id shouldBe reservationId
@@ -79,7 +82,7 @@ class ReservationServiceTest : BehaviorSpec({
 
             then("예약이 없다는 예외가 발생한다") {
                 assertThrows<ReservationNotFoundException> {
-                    reservationService.validateReservation(reservationId)
+                    reservationService.validateReservation(command)
                 }
             }
         }

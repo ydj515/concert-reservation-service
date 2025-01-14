@@ -17,7 +17,6 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
@@ -25,7 +24,6 @@ import java.util.concurrent.Executors
 
 @ActiveProfiles("integration-test")
 @SpringBootTest
-@Transactional
 class BalanceUseCaseTest(
     private val balanceUseCase: BalanceUseCase,
     private val balanceService: BalanceService,

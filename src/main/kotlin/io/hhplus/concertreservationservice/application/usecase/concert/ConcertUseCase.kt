@@ -5,11 +5,11 @@ import io.hhplus.concertreservationservice.application.usecase.concert.request.S
 import io.hhplus.concertreservationservice.application.usecase.concert.response.SearchAvailSeatResult
 import io.hhplus.concertreservationservice.application.usecase.concert.response.SeatReserveResult
 import io.hhplus.concertreservationservice.domain.concert.service.ConcertService
-import io.hhplus.concertreservationservice.domain.concert.service.ReservationService
 import io.hhplus.concertreservationservice.domain.concert.service.request.CreateReserveSeatCommand
 import io.hhplus.concertreservationservice.domain.concert.service.request.SearchAvailSeatCommand
 import io.hhplus.concertreservationservice.domain.concert.service.response.toAvailSeatResult
 import io.hhplus.concertreservationservice.domain.concert.service.response.toSeatReserveResult
+import io.hhplus.concertreservationservice.domain.reservation.service.ReservationService
 import io.hhplus.concertreservationservice.domain.token.service.TokenService
 import io.hhplus.concertreservationservice.domain.token.service.request.TokenStatusCommand
 import io.hhplus.concertreservationservice.domain.user.service.UserService

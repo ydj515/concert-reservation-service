@@ -1,4 +1,4 @@
-package io.hhplus.concertreservationservice.domain.concert.repository
+package io.hhplus.concertreservationservice.domain.reservation.repository
 
 import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import java.time.LocalDateTime
