@@ -5,14 +5,11 @@ import io.hhplus.concertreservationservice.application.usecase.token.request.Cre
 import io.hhplus.concertreservationservice.application.usecase.token.request.ReservationTokenStatusCriteria
 import io.hhplus.concertreservationservice.application.usecase.token.response.toReservationTokenCreateResponse
 import io.hhplus.concertreservationservice.application.usecase.token.response.toReservationTokenStatusResponse
-import io.hhplus.concertreservationservice.common.response.ApiResponse
-import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.token.request.ReservationTokenCreateRequest
 import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenCreateResponse
 import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenStatusResponse
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -42,10 +39,10 @@ class TokenController(
     @PostMapping("")
     fun createReservationToken(
         @RequestBody request: ReservationTokenCreateRequest,
-    ): ResponseEntity<SuccessResponse<ReservationTokenCreateResponse>> {
+    ): ReservationTokenCreateResponse {
         val criteria = CreateReservationTokenCriteria(request.userId)
         val result = tokenUseCase.createToken(criteria)
-        return ApiResponse.success(result.toReservationTokenCreateResponse())
+        return result.toReservationTokenCreateResponse()
     }
 
     @Operation(
@@ -65,9 +62,9 @@ class TokenController(
     @GetMapping("/status")
     fun getQueueTokenStatus(
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
-    ): ResponseEntity<SuccessResponse<ReservationTokenStatusResponse>> {
+    ): ReservationTokenStatusResponse {
         val criteria = ReservationTokenStatusCriteria(token)
         val result = tokenUseCase.getTokenStatus(criteria)
-        return ApiResponse.success(result.toReservationTokenStatusResponse())
+        return result.toReservationTokenStatusResponse()
     }
 }

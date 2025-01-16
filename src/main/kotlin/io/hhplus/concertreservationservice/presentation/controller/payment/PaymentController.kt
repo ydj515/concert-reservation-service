@@ -3,13 +3,10 @@ package io.hhplus.concertreservationservice.presentation.controller.payment
 import io.hhplus.concertreservationservice.application.usecase.payment.PaymentUseCase
 import io.hhplus.concertreservationservice.application.usecase.payment.request.ProcessPaymentCriteria
 import io.hhplus.concertreservationservice.application.usecase.payment.response.toPaymentResponse
-import io.hhplus.concertreservationservice.common.response.ApiResponse
-import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.payment.request.PaymentRequest
 import io.hhplus.concertreservationservice.presentation.controller.payment.response.PaymentResponse
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -39,9 +36,9 @@ class PaymentController(
     fun processPayment(
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
         @RequestBody paymentRequest: PaymentRequest,
-    ): ResponseEntity<SuccessResponse<PaymentResponse>> {
+    ): PaymentResponse {
         val criteria = ProcessPaymentCriteria(token, paymentRequest.reservationId, paymentRequest.amount)
         val result = paymentUseCase.processPayment(criteria)
-        return ApiResponse.success(result.toPaymentResponse())
+        return result.toPaymentResponse()
     }
 }

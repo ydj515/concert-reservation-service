@@ -3,13 +3,10 @@ package io.hhplus.concertreservationservice.presentation.controller.concert
 import io.hhplus.concertreservationservice.application.usecase.concert.ConcertUseCase
 import io.hhplus.concertreservationservice.application.usecase.concert.request.SearchAvailSeatCriteria
 import io.hhplus.concertreservationservice.application.usecase.concert.response.toSearchAvailResponse
-import io.hhplus.concertreservationservice.common.response.ApiResponse
-import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.concert.response.SearchAvailSeatResponse
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
@@ -43,9 +40,9 @@ class ConcertController(
         @PathVariable scheduleId: Long,
         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") date: LocalDate,
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
-    ): ResponseEntity<SuccessResponse<SearchAvailSeatResponse>> {
+    ): SearchAvailSeatResponse {
         val criteria = SearchAvailSeatCriteria(token, concertId, scheduleId, date)
         val result = concertUseCase.searchAvailableSeats(criteria)
-        return ApiResponse.success(result.toSearchAvailResponse())
+        return result.toSearchAvailResponse()
     }
 }
