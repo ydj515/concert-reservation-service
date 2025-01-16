@@ -3,13 +3,10 @@ package io.hhplus.concertreservationservice.presentation.controller.concert
 import io.hhplus.concertreservationservice.application.usecase.concert.ConcertUseCase
 import io.hhplus.concertreservationservice.application.usecase.concert.request.SeatReserveCriteria
 import io.hhplus.concertreservationservice.application.usecase.concert.response.toSeatReserveResponse
-import io.hhplus.concertreservationservice.common.response.ApiResponse
-import io.hhplus.concertreservationservice.common.response.SuccessResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.concert.request.ReservationSeatRequest
 import io.hhplus.concertreservationservice.presentation.controller.concert.response.ReservationSeatResponse
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -42,9 +39,9 @@ class ConcertReservationController(
         @PathVariable scheduleId: Long,
         @RequestBody reservationRequest: ReservationSeatRequest,
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
-    ): ResponseEntity<SuccessResponse<ReservationSeatResponse>> {
+    ): ReservationSeatResponse {
         val criteria = SeatReserveCriteria(concertId, scheduleId, reservationRequest.seatNo, token)
         val result = concertUseCase.reserveSeat(criteria)
-        return ApiResponse.success(result.toSeatReserveResponse())
+        return result.toSeatReserveResponse()
     }
 }
