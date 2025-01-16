@@ -47,6 +47,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:mysql")
+    testImplementation("io.rest-assured:rest-assured:5.3.0")
+    testImplementation("io.rest-assured:json-path:5.3.0")
+    testImplementation("io.rest-assured:xml-path:5.3.0")
 
     // Kotest 의존성
     testImplementation("io.kotest:kotest-runner-junit5:5.7.2")
