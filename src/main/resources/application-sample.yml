@@ -23,6 +23,18 @@ spring:
       hibernate:
         format_sql: true
 
+logging:
+  level:
+    sql: debug
+    org.hibernate.sql: debug
+    org:
+      springframework: INFO
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
 ---
 spring:
   config:
@@ -45,6 +57,18 @@ spring:
       hibernate:
         format_sql: true
 
+logging:
+  level:
+    sql: debug
+    org.hibernate.sql: debug
+    org:
+      springframework: INFO
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
 ---
 spring:
   config:
@@ -62,3 +86,15 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+logging:
+  level:
+    sql: debug
+    org.hibernate.sql: debug
+    org:
+      springframework: INFO
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
