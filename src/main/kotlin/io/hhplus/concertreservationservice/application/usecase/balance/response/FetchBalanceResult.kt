@@ -9,7 +9,7 @@ data class FetchBalanceResult(
     val balance: Money,
 )
 
-fun FetchBalanceResult.toFetchBalanceResponse(): BalanceFetchResponse {
+fun FetchBalanceResult.toResponse(): BalanceFetchResponse {
     return BalanceFetchResponse(
         balance = balance.amount,
     )

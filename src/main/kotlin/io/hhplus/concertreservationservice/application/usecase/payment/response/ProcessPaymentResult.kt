@@ -8,7 +8,7 @@ class ProcessPaymentResult(
     val status: PaymentStatus,
 )
 
-fun ProcessPaymentResult.toPaymentResponse(): PaymentResponse {
+fun ProcessPaymentResult.toResponse(): PaymentResponse {
     return PaymentResponse(
         status = this.status,
     )

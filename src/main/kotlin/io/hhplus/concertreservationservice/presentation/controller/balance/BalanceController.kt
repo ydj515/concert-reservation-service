@@ -3,8 +3,7 @@ package io.hhplus.concertreservationservice.presentation.controller.balance
 import io.hhplus.concertreservationservice.application.usecase.balance.BalanceUseCase
 import io.hhplus.concertreservationservice.application.usecase.balance.request.ChargeBalanceCriteria
 import io.hhplus.concertreservationservice.application.usecase.balance.request.FetchBalanceCriteria
-import io.hhplus.concertreservationservice.application.usecase.balance.response.toBalanceChargeResponse
-import io.hhplus.concertreservationservice.application.usecase.balance.response.toFetchBalanceResponse
+import io.hhplus.concertreservationservice.application.usecase.balance.response.toResponse
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.balance.request.BalanceChargeRequest
@@ -44,7 +43,7 @@ class BalanceController(
     ): BalanceChargeResponse {
         val criteria = ChargeBalanceCriteria(Money(balanceRequest.amount), token)
         val result = balanceUsecase.chargeBalance(criteria)
-        return result.toBalanceChargeResponse()
+        return result.toResponse()
     }
 
     @Operation(
@@ -67,6 +66,6 @@ class BalanceController(
     ): BalanceFetchResponse {
         val criteria = FetchBalanceCriteria(token)
         val result = balanceUsecase.getBalance(criteria)
-        return result.toFetchBalanceResponse()
+        return result.toResponse()
     }
 }

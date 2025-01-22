@@ -7,7 +7,7 @@ data class SeatReserveResult(
     val seatNo: Int,
 )
 
-fun SeatReserveResult.toSeatReserveResponse(): ReservationSeatResponse {
+fun SeatReserveResult.toResponse(): ReservationSeatResponse {
     return ReservationSeatResponse(
         reservationId = this.reservationId,
         seatNo = this.seatNo,

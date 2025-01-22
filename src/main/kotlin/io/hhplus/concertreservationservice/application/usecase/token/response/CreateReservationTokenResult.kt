@@ -7,7 +7,7 @@ data class CreateReservationTokenResult(
     val token: String,
 )
 
-fun CreateReservationTokenResult.toReservationTokenCreateResponse(): ReservationTokenCreateResponse {
+fun CreateReservationTokenResult.toResponse(): ReservationTokenCreateResponse {
     return ReservationTokenCreateResponse(
         token = this.token,
     )

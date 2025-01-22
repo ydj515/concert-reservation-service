@@ -2,7 +2,7 @@ package io.hhplus.concertreservationservice.presentation.controller.concert
 
 import io.hhplus.concertreservationservice.application.usecase.concert.ConcertUseCase
 import io.hhplus.concertreservationservice.application.usecase.concert.request.SearchAvailSeatCriteria
-import io.hhplus.concertreservationservice.application.usecase.concert.response.toSearchAvailResponse
+import io.hhplus.concertreservationservice.application.usecase.concert.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.concert.response.SearchAvailSeatResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -43,6 +43,6 @@ class ConcertController(
     ): SearchAvailSeatResponse {
         val criteria = SearchAvailSeatCriteria(token, concertId, scheduleId, date)
         val result = concertUseCase.searchAvailableSeats(criteria)
-        return result.toSearchAvailResponse()
+        return result.toResponse()
     }
 }

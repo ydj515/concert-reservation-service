@@ -2,7 +2,7 @@ package io.hhplus.concertreservationservice.presentation.controller.payment
 
 import io.hhplus.concertreservationservice.application.usecase.payment.PaymentUseCase
 import io.hhplus.concertreservationservice.application.usecase.payment.request.ProcessPaymentCriteria
-import io.hhplus.concertreservationservice.application.usecase.payment.response.toPaymentResponse
+import io.hhplus.concertreservationservice.application.usecase.payment.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.payment.request.PaymentRequest
 import io.hhplus.concertreservationservice.presentation.controller.payment.response.PaymentResponse
@@ -39,6 +39,6 @@ class PaymentController(
     ): PaymentResponse {
         val criteria = ProcessPaymentCriteria(token, paymentRequest.reservationId, paymentRequest.amount)
         val result = paymentUseCase.processPayment(criteria)
-        return result.toPaymentResponse()
+        return result.toResponse()
     }
 }

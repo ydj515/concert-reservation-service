@@ -9,7 +9,7 @@ data class ReservationTokenStatusResult(
     val userId: Long,
 )
 
-fun ReservationTokenStatusResult.toReservationTokenStatusResponse(): ReservationTokenStatusResponse {
+fun ReservationTokenStatusResult.toResponse(): ReservationTokenStatusResponse {
     return ReservationTokenStatusResponse(
         status = this.status,
         userId = this.userId,

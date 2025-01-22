@@ -9,7 +9,7 @@ data class ChargeBalanceResult(
     val balance: Money,
 )
 
-fun ChargeBalanceResult.toBalanceChargeResponse(): BalanceChargeResponse {
+fun ChargeBalanceResult.toResponse(): BalanceChargeResponse {
     return BalanceChargeResponse(
         balance = balance.amount,
     )

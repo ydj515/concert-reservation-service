@@ -9,7 +9,7 @@ data class SearchAvailSeatResult(
     val available: Boolean,
 )
 
-fun SearchAvailSeatResult.toSearchAvailResponse(): SearchAvailSeatResponse {
+fun SearchAvailSeatResult.toResponse(): SearchAvailSeatResponse {
     return SearchAvailSeatResponse(
         available = this.available,
         seats = this.seats,

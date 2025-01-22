@@ -2,7 +2,7 @@ package io.hhplus.concertreservationservice.presentation.controller.concert
 
 import io.hhplus.concertreservationservice.application.usecase.concert.ConcertUseCase
 import io.hhplus.concertreservationservice.application.usecase.concert.request.SeatReserveCriteria
-import io.hhplus.concertreservationservice.application.usecase.concert.response.toSeatReserveResponse
+import io.hhplus.concertreservationservice.application.usecase.concert.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.concert.request.ReservationSeatRequest
 import io.hhplus.concertreservationservice.presentation.controller.concert.response.ReservationSeatResponse
@@ -42,6 +42,6 @@ class ConcertReservationController(
     ): ReservationSeatResponse {
         val criteria = SeatReserveCriteria(concertId, scheduleId, reservationRequest.seatNo, token)
         val result = concertUseCase.reserveSeat(criteria)
-        return result.toSeatReserveResponse()
+        return result.toResponse()
     }
 }

@@ -3,8 +3,7 @@ package io.hhplus.concertreservationservice.presentation.controller.token
 import io.hhplus.concertreservationservice.application.usecase.token.TokenUseCase
 import io.hhplus.concertreservationservice.application.usecase.token.request.CreateReservationTokenCriteria
 import io.hhplus.concertreservationservice.application.usecase.token.request.ReservationTokenStatusCriteria
-import io.hhplus.concertreservationservice.application.usecase.token.response.toReservationTokenCreateResponse
-import io.hhplus.concertreservationservice.application.usecase.token.response.toReservationTokenStatusResponse
+import io.hhplus.concertreservationservice.application.usecase.token.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.token.request.ReservationTokenCreateRequest
 import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenCreateResponse
@@ -42,7 +41,7 @@ class TokenController(
     ): ReservationTokenCreateResponse {
         val criteria = CreateReservationTokenCriteria(request.userId)
         val result = tokenUseCase.createToken(criteria)
-        return result.toReservationTokenCreateResponse()
+        return result.toResponse()
     }
 
     @Operation(
@@ -65,6 +64,6 @@ class TokenController(
     ): ReservationTokenStatusResponse {
         val criteria = ReservationTokenStatusCriteria(token)
         val result = tokenUseCase.getTokenStatus(criteria)
-        return result.toReservationTokenStatusResponse()
+        return result.toResponse()
     }
 }
