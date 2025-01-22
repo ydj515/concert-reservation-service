@@ -3,6 +3,7 @@ package io.hhplus.concertreservationservice.presentation.advice
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.hhplus.concertreservationservice.common.response.ApiResponse
 import org.springframework.core.MethodParameter
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageConverter
@@ -54,8 +55,14 @@ class GlobalResponseAdvice(private val objectMapper: ObjectMapper) : ResponseBod
         request: ServerHttpRequest,
         response: ServerHttpResponse,
     ): Any? {
-        return when (body) {
-            is ResponseEntity<*> -> body // ResponseEntity 는 그대로 반환
+        val httpServletResponse =
+            (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).response
+                ?: throw IllegalStateException("HttpServletResponse is not available")
+
+        val httpStatus = HttpStatus.valueOf(httpServletResponse.status)
+
+        return when {
+            httpStatus.isError -> body
             else -> ApiResponse.success(body) // 그 외 응답을 SuccessResponse 로 변환
         }
     }
