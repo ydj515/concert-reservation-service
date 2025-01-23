@@ -13,11 +13,15 @@ import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("e2e-test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TokenControllerIntegrationTest(
     @LocalServerPort val port: Int,
     private val tokenJpaRepository: ReservationTokenJpaRepository,

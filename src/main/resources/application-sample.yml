@@ -10,6 +10,25 @@ spring:
   config:
     activate:
       on-profile: local
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org.quartz.scheduler.instanceName: QuartzClusterScheduler
+      org.quartz.scheduler.instanceId: AUTO
+      org.quartz.jobStore.isClustered: true
+      org.quartz.jobStore.clusterCheckinInterval: 10000 # 10초마다 클러스터 상태 확인
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+      org.quartz.jobStore.useProperties: false
+      org.quartz.jobStore.dataSource: quartzDataSource
+      org.quartz.jobStore.tablePrefix: QRTZ_
+    data-source:
+      quartzDataSource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:test_db}
+        username: ${MYSQL_USER:test}
+        password: ${MYSQL_PASSWORD:test}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:test_db}
@@ -22,6 +41,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 logging:
   level:
@@ -74,6 +97,25 @@ spring:
   config:
     activate:
       on-profile: integration-test
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org.quartz.scheduler.instanceName: QuartzClusterScheduler
+      org.quartz.scheduler.instanceId: AUTO
+      org.quartz.jobStore.isClustered: true
+      org.quartz.jobStore.clusterCheckinInterval: 10000 # 10초마다 클러스터 상태 확인
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+      org.quartz.jobStore.useProperties: false
+      org.quartz.jobStore.dataSource: quartzDataSource
+      org.quartz.jobStore.tablePrefix: QRTZ_
+    data-source:
+      quartzDataSource:
+        driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+        url: jdbc:tc:mysql:8.4.3:///test
+        username: test
+        password: test
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:mysql:8.4.3:///test
@@ -86,6 +128,64 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+logging:
+  level:
+    sql: debug
+    org.hibernate.sql: debug
+    org:
+      springframework: INFO
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+---
+spring:
+  config:
+    activate:
+      on-profile: e2e-test
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org.quartz.scheduler.instanceName: QuartzClusterScheduler
+      org.quartz.scheduler.instanceId: AUTO
+      org.quartz.jobStore.isClustered: true
+      org.quartz.jobStore.clusterCheckinInterval: 10000 # 10초마다 클러스터 상태 확인
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+      org.quartz.jobStore.useProperties: false
+      org.quartz.jobStore.dataSource: quartzDataSource
+      org.quartz.jobStore.tablePrefix: QRTZ_
+    data-source:
+      quartzDataSource:
+        driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+        url: jdbc:tc:mysql:8.4.3:///test
+        username: test
+        password: test
+
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8.4.3:///test
+    username: test
+    password: test
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 logging:
   level:

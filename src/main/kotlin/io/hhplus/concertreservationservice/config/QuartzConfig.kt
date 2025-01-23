@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @Configuration
-@Profile("!test && !integration-test")
+@Profile("!test && !integration-test && !e2e-test")
 @EnableTransactionManagement
 class QuartzConfig {
     // TokenActivationJob 설정

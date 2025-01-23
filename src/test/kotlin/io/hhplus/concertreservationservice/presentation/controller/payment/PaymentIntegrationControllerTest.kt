@@ -22,16 +22,20 @@ import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.ActiveProfiles
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("e2e-test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PaymentIntegrationControllerTest(
     @LocalServerPort val port: Int,
     private val tokenJpaRepository: ReservationTokenJpaRepository,

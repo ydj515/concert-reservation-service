@@ -7,9 +7,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.ApplicationContext
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("e2e-test")
 class FilterConfigTest(
     private val applicationContext: ApplicationContext,
 ) : StringSpec({
