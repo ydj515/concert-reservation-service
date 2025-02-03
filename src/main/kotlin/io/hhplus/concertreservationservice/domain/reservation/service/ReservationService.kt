@@ -15,7 +15,7 @@ import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import io.hhplus.concertreservationservice.domain.reservation.exception.AlreadyReservedException
 import io.hhplus.concertreservationservice.domain.reservation.extension.toCreateReservedSeatInfo
 import io.hhplus.concertreservationservice.domain.reservation.repository.SeatReservationRepository
-import io.hhplus.concertreservationservice.infrastructure.lock.DistributedLock
+import io.hhplus.concertreservationservice.infrastructure.lock.DistributedLockWithTransactional
 import org.springframework.stereotype.Service
 
 @Service
@@ -53,7 +53,7 @@ class ReservationService(
     }
 
 //        @Transactional
-    @DistributedLock(key = "#command.concertId + ':' + #command.scheduleId + ':' + #command.seatNo")
+    @DistributedLockWithTransactional(key = "#command.concertId + ':' + #command.scheduleId + ':' + #command.seatNo")
     fun createReservationInfo(command: CreateReserveSeatCommand): CreateReservedSeatInfo {
         // 좌석 예약 유무 확인
         val reservedSeat =

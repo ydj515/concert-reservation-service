@@ -21,28 +21,28 @@ class DistributedLockAop(
         private val log: Logger = LoggerFactory.getLogger(DistributedLockAop::class.java)
     }
 
-    @Around("@annotation(io.hhplus.concertreservationservice.infrastructure.lock.DistributedLock)")
+    @Around("@annotation(io.hhplus.concertreservationservice.infrastructure.lock.DistributedLockWithTransactional)")
     @Throws(Throwable::class)
     fun lock(joinPoint: ProceedingJoinPoint): Any? {
         val signature = joinPoint.signature as MethodSignature
         val method = signature.method
-        val distributedLock = method.getAnnotation(DistributedLock::class.java)
+        val distributedLockWithTransactional = method.getAnnotation(DistributedLockWithTransactional::class.java)
 
         val key =
             REDISSON_LOCK_PREFIX +
                 CustomSpringELParser.getDynamicValue(
                     signature.parameterNames,
                     joinPoint.args,
-                    distributedLock.key,
+                    distributedLockWithTransactional.key,
                 )
         val rLock: RLock = redissonClient.getLock(key)
 
         return try {
             val available =
                 rLock.tryLock(
-                    distributedLock.waitTime,
-                    distributedLock.leaseTime,
-                    distributedLock.timeUnit,
+                    distributedLockWithTransactional.waitTime,
+                    distributedLockWithTransactional.leaseTime,
+                    distributedLockWithTransactional.timeUnit,
                 )
             if (!available) {
                 return false

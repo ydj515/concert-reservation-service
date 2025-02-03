@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class DistributedLock(
+annotation class DistributedLockWithTransactional(
     /**
      * 락의 이름
      */
