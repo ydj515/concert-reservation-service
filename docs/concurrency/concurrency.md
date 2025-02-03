@@ -281,7 +281,7 @@ class BusinessService(private val namedLockService: NamedLockService) {
 - 콘서트 예약 usecase 입니다. annotation으로 lock key를 지정합니다. 
 - 2차로 비관적 락을 걸어 데이터 정합성을 보장합니다. 
 ```kotlin
-@DistributedLock(key = "#command.concertId + ':' + #command.scheduleId + ':' + #command.seatNo")
+@DistributedLockWithTransactional(key = "#command.concertId + ':' + #command.scheduleId + ':' + #command.seatNo")
 fun createReservationInfo(command: CreateReserveSeatCommand): CreateReservedSeatInfo {
     // 좌석 예약 유무 확인
     val reservedSeat =
@@ -309,7 +309,7 @@ fun createReservationInfo(command: CreateReserveSeatCommand): CreateReservedSeat
 - 아래와 같이 락을 획득하고 해제하는 과정을 aop로 구성합니다.
 - 또한 lock을 획득하고 트랜잭션 AOP를 호출하여 `락획득 -> 트랜잭션 시작`의 순서를 보장합니다.
 ```kotlin
-@Around("@annotation(io.hhplus.concertreservationservice.infrastructure.lock.DistributedLock)")
+@Around("@annotation(io.hhplus.concertreservationservice.infrastructure.lock.DistributedLockWithTransactional)")
 @Throws(Throwable::class)
 fun lock(joinPoint: ProceedingJoinPoint): Any? {
 
@@ -319,9 +319,9 @@ fun lock(joinPoint: ProceedingJoinPoint): Any? {
     return try {
         val available =
             rLock.tryLock(
-                distributedLock.waitTime,
-                distributedLock.leaseTime,
-                distributedLock.timeUnit,
+                distributedLockWithTransactional.waitTime,
+                distributedLockWithTransactional.leaseTime,
+                distributedLockWithTransactional.timeUnit,
             )
         if (!available) {
             return false
@@ -423,7 +423,7 @@ fun createReservationInfo(command: CreateReserveSeatCommand): CreateReservedSeat
 
 - 분산락 적용
 ```kotlin
-@DistributedLock(key = "#command.concertId + ':' + #command.scheduleId + ':' + #command.seatNo")
+@distributedLockWithTransactional(key = "#command.concertId + ':' + #command.scheduleId + ':' + #command.seatNo")
 fun createReservationInfo(command: CreateReserveSeatCommand): CreateReservedSeatInfo {
     // ...
 }
