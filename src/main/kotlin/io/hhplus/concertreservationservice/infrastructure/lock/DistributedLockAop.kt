@@ -35,33 +35,26 @@ class DistributedLockAop(
                     joinPoint.args,
                     distributedLockWithTransactional.key,
                 )
+
         val rLock: RLock = redissonClient.getLock(key)
 
-        return try {
-            val available =
-                rLock.tryLock(
-                    distributedLockWithTransactional.waitTime,
-                    distributedLockWithTransactional.leaseTime,
-                    distributedLockWithTransactional.timeUnit,
-                )
-            if (!available) {
-                return false
-            }
+        if (!rLock.tryLock(
+                distributedLockWithTransactional.waitTime,
+                distributedLockWithTransactional.leaseTime,
+                distributedLockWithTransactional.timeUnit,
+            )
+        ) {
+            throw Exception("Failed to acquire lock for key: $key")
+        }
 
+        return try {
             aopForTransaction.proceed(joinPoint)
         } catch (e: InterruptedException) {
-            throw InterruptedException()
+            Thread.currentThread().interrupt()
+            throw e
         } finally {
-            try {
-                if (rLock.isHeldByCurrentThread) {
-                    rLock.unlock()
-                }
-            } catch (e: IllegalMonitorStateException) {
-                log.info(
-                    "Redisson Lock Already Unlocked: serviceName = {}, key = {}",
-                    method.name,
-                    key,
-                )
+            if (rLock.isHeldByCurrentThread) {
+                rLock.unlock()
             }
         }
     }
