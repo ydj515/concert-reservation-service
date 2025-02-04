@@ -1,7 +1,7 @@
 package io.hhplus.concertreservationservice.common.filter
 
+import io.hhplus.concertreservationservice.application.usecase.token.TokenProvider
 import io.hhplus.concertreservationservice.domain.token.exception.InvalidTokenException
-import io.hhplus.concertreservationservice.infrastructure.TokenProvider
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
