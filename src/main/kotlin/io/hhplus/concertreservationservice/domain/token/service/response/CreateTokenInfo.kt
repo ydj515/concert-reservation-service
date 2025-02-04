@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.domain.token.service.response
 
-import io.hhplus.concertreservationservice.application.usecase.token.response.CreateReservationTokenResult
+import io.hhplus.concertreservationservice.application.facade.token.response.CreateReservationTokenResult
 import io.hhplus.concertreservationservice.domain.token.TokenStatus
 import java.time.LocalDateTime
 

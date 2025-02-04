@@ -1,9 +1,9 @@
 package io.hhplus.concertreservationservice.presentation.controller.token
 
-import io.hhplus.concertreservationservice.application.usecase.token.TokenUseCase
-import io.hhplus.concertreservationservice.application.usecase.token.request.CreateReservationTokenCriteria
-import io.hhplus.concertreservationservice.application.usecase.token.request.ReservationTokenStatusCriteria
-import io.hhplus.concertreservationservice.application.usecase.token.response.toResponse
+import io.hhplus.concertreservationservice.application.facade.token.TokenUseCase
+import io.hhplus.concertreservationservice.application.facade.token.request.CreateReservationTokenCriteria
+import io.hhplus.concertreservationservice.application.facade.token.request.ReservationTokenStatusCriteria
+import io.hhplus.concertreservationservice.application.facade.token.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.token.request.ReservationTokenCreateRequest
 import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenCreateResponse

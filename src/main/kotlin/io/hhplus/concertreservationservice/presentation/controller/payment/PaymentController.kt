@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.presentation.controller.payment
 
-import io.hhplus.concertreservationservice.application.usecase.payment.PaymentUseCase
-import io.hhplus.concertreservationservice.application.usecase.payment.request.ProcessPaymentCriteria
-import io.hhplus.concertreservationservice.application.usecase.payment.response.toResponse
+import io.hhplus.concertreservationservice.application.facade.payment.PaymentUseCase
+import io.hhplus.concertreservationservice.application.facade.payment.request.ProcessPaymentCriteria
+import io.hhplus.concertreservationservice.application.facade.payment.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.payment.request.PaymentRequest
 import io.hhplus.concertreservationservice.presentation.controller.payment.response.PaymentResponse

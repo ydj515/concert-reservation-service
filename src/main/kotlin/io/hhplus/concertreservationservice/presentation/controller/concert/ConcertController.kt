@@ -1,8 +1,8 @@
 package io.hhplus.concertreservationservice.presentation.controller.concert
 
-import io.hhplus.concertreservationservice.application.usecase.concert.ConcertUseCase
-import io.hhplus.concertreservationservice.application.usecase.concert.request.SearchAvailSeatCriteria
-import io.hhplus.concertreservationservice.application.usecase.concert.response.toResponse
+import io.hhplus.concertreservationservice.application.facade.concert.ConcertUseCase
+import io.hhplus.concertreservationservice.application.facade.concert.request.SearchAvailSeatCriteria
+import io.hhplus.concertreservationservice.application.facade.concert.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.concert.response.SearchAvailSeatResponse
 import io.swagger.v3.oas.annotations.Operation
