@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.config
 
-import io.hhplus.concertreservationservice.infrastructure.filter.JwtAuthenticationFilter
+import io.hhplus.concertreservationservice.common.filter.JwtAuthenticationFilter
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

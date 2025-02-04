@@ -1,4 +1,4 @@
-package io.hhplus.concertreservationservice.infrastructure.filter
+package io.hhplus.concertreservationservice.common.filter
 
 import io.hhplus.concertreservationservice.domain.token.exception.InvalidTokenException
 import io.hhplus.concertreservationservice.infrastructure.TokenProvider
