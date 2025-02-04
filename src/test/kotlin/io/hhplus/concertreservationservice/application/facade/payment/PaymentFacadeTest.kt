@@ -1,6 +1,7 @@
 package io.hhplus.concertreservationservice.application.facade.payment
 
 import io.hhplus.concertreservationservice.application.facade.payment.request.ProcessPaymentCriteria
+import io.hhplus.concertreservationservice.application.helper.TokenProvider
 import io.hhplus.concertreservationservice.domain.DateRange
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
@@ -14,7 +15,6 @@ import io.hhplus.concertreservationservice.domain.payment.service.PaymentService
 import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import io.hhplus.concertreservationservice.domain.reservation.service.ReservationService
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
-import io.hhplus.concertreservationservice.domain.token.service.TokenProvider
 import io.hhplus.concertreservationservice.domain.token.service.TokenService
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.domain.user.exception.InsufficientBalanceException
@@ -49,7 +49,7 @@ class PaymentFacadeTest(
     private val tokenService: TokenService,
     private val paymentService: PaymentService,
     private val reservationService: ReservationService,
-    private val tokenProvider: TokenProvider,
+    private val jwtTokenProvider: TokenProvider,
     private val seatReservationJpaRepository: SeatReservationJpaRepository,
     private val seatJpaRepository: SeatJpaRepository,
     private val placeJpaRepository: PlaceJpaRepository,
@@ -112,7 +112,7 @@ class PaymentFacadeTest(
             // 예약을 시작할 수 있도록 설정
             val seat = seatJpaRepository.save(Seat(no = seatNo, scheduleSeat = scheduleSeat))
 
-            val token = tokenProvider.generateToken(user.id)
+            val token = jwtTokenProvider.generateToken(user.id)
             tokenJpaRepository.save(
                 ReservationToken(
                     expiredAt = LocalDateTime.now(),
@@ -212,7 +212,7 @@ class PaymentFacadeTest(
             // 예약을 시작할 수 있도록 설정
             val seat = seatJpaRepository.save(Seat(no = seatNo, scheduleSeat = scheduleSeat))
 
-            val token = tokenProvider.generateToken(user.id)
+            val token = jwtTokenProvider.generateToken(user.id)
             tokenJpaRepository.save(
                 ReservationToken(
                     expiredAt = LocalDateTime.now(),
