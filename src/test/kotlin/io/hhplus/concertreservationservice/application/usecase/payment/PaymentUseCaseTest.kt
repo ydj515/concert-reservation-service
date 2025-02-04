@@ -1,6 +1,7 @@
 package io.hhplus.concertreservationservice.application.usecase.payment
 
 import io.hhplus.concertreservationservice.application.usecase.payment.request.ProcessPaymentCriteria
+import io.hhplus.concertreservationservice.application.usecase.token.TokenProvider
 import io.hhplus.concertreservationservice.domain.DateRange
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
@@ -18,7 +19,6 @@ import io.hhplus.concertreservationservice.domain.token.service.TokenService
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.domain.user.exception.InsufficientBalanceException
 import io.hhplus.concertreservationservice.domain.user.service.UserService
-import io.hhplus.concertreservationservice.infrastructure.TokenProvider
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ConcertJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.PaymentJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.PlaceJpaRepository

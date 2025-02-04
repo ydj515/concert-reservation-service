@@ -1,6 +1,7 @@
 package io.hhplus.concertreservationservice.application.usecase.concert
 
 import io.hhplus.concertreservationservice.application.usecase.concert.request.SeatReserveCriteria
+import io.hhplus.concertreservationservice.application.usecase.token.TokenProvider
 import io.hhplus.concertreservationservice.domain.DateRange
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
@@ -11,7 +12,6 @@ import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.SeatType
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.user.User
-import io.hhplus.concertreservationservice.infrastructure.TokenProvider
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ConcertJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.PlaceJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository

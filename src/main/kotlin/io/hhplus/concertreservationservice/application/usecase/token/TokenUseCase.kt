@@ -10,7 +10,6 @@ import io.hhplus.concertreservationservice.domain.token.service.request.TokenSta
 import io.hhplus.concertreservationservice.domain.token.service.response.toCreateReservationTokenResult
 import io.hhplus.concertreservationservice.domain.token.service.response.toReservationTokenStatusResult
 import io.hhplus.concertreservationservice.domain.user.service.UserService
-import io.hhplus.concertreservationservice.infrastructure.TokenProvider
 import org.springframework.stereotype.Component
 
 @Component
