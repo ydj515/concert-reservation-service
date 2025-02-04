@@ -1,9 +1,9 @@
 package io.hhplus.concertreservationservice.presentation.controller.balance
 
-import io.hhplus.concertreservationservice.application.usecase.balance.BalanceUseCase
-import io.hhplus.concertreservationservice.application.usecase.balance.request.ChargeBalanceCriteria
-import io.hhplus.concertreservationservice.application.usecase.balance.request.FetchBalanceCriteria
-import io.hhplus.concertreservationservice.application.usecase.balance.response.toResponse
+import io.hhplus.concertreservationservice.application.facade.balance.BalanceUseCase
+import io.hhplus.concertreservationservice.application.facade.balance.request.ChargeBalanceCriteria
+import io.hhplus.concertreservationservice.application.facade.balance.request.FetchBalanceCriteria
+import io.hhplus.concertreservationservice.application.facade.balance.response.toResponse
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.balance.request.BalanceChargeRequest
