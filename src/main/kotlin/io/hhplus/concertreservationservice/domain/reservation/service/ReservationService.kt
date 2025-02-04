@@ -52,7 +52,6 @@ class ReservationService(
         reservationRepository.saveReservation(reservation)
     }
 
-//        @Transactional
     @DistributedLockWithTransactional(key = "#command.concertId + ':' + #command.scheduleId + ':' + #command.seatNo")
     fun createReservationInfo(command: CreateReserveSeatCommand): CreateReservedSeatInfo {
         // 좌석 예약 유무 확인

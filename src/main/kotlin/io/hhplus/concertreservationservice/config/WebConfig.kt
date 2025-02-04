@@ -1,6 +1,6 @@
-package io.hhplus.concertreservationservice.infrastructure.config
+package io.hhplus.concertreservationservice.config
 
-import io.hhplus.concertreservationservice.infrastructure.interceptor.RequestResponseLoggingInterceptor
+import io.hhplus.concertreservationservice.common.interceptor.RequestResponseLoggingInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer

@@ -1,4 +1,4 @@
-package io.hhplus.concertreservationservice.infrastructure.filter
+package io.hhplus.concertreservationservice.common.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest

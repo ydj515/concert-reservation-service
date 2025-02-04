@@ -1,4 +1,4 @@
-package io.hhplus.concertreservationservice.infrastructure.interceptor
+package io.hhplus.concertreservationservice.common.interceptor
 
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpServletResponseWrapper
