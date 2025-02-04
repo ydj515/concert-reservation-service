@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.token
 
-import io.hhplus.concertreservationservice.application.facade.token.TokenUseCase
+import io.hhplus.concertreservationservice.application.facade.token.TokenFacade
 import io.hhplus.concertreservationservice.application.facade.token.request.CreateReservationTokenCriteria
 import io.hhplus.concertreservationservice.application.facade.token.request.ReservationTokenStatusCriteria
 import io.hhplus.concertreservationservice.application.facade.token.response.toResponse
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/reservation-token")
 class TokenController(
-    private val tokenUseCase: TokenUseCase,
+    private val tokenFacade: TokenFacade,
 ) {
     @Operation(
         summary = "토큰 발급",
@@ -40,7 +40,7 @@ class TokenController(
         @RequestBody request: ReservationTokenCreateRequest,
     ): ReservationTokenCreateResponse {
         val criteria = CreateReservationTokenCriteria(request.userId)
-        val result = tokenUseCase.createToken(criteria)
+        val result = tokenFacade.createToken(criteria)
         return result.toResponse()
     }
 
@@ -63,7 +63,7 @@ class TokenController(
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
     ): ReservationTokenStatusResponse {
         val criteria = ReservationTokenStatusCriteria(token)
-        val result = tokenUseCase.getTokenStatus(criteria)
+        val result = tokenFacade.getTokenStatus(criteria)
         return result.toResponse()
     }
 }

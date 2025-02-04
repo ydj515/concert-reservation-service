@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.concert
 
-import io.hhplus.concertreservationservice.application.facade.concert.ConcertUseCase
+import io.hhplus.concertreservationservice.application.facade.concert.ConcertFacade
 import io.hhplus.concertreservationservice.application.facade.concert.request.SearchAvailSeatCriteria
 import io.hhplus.concertreservationservice.application.facade.concert.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
@@ -18,7 +18,7 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/api/concert")
 class ConcertController(
-    private val concertUseCase: ConcertUseCase,
+    private val concertFacade: ConcertFacade,
 ) {
     @Operation(
         summary = "콘서트 스케쥴 예약 날짜 조회",
@@ -42,7 +42,7 @@ class ConcertController(
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
     ): SearchAvailSeatResponse {
         val criteria = SearchAvailSeatCriteria(token, concertId, scheduleId, date)
-        val result = concertUseCase.searchAvailableSeats(criteria)
+        val result = concertFacade.searchAvailableSeats(criteria)
         return result.toResponse()
     }
 }

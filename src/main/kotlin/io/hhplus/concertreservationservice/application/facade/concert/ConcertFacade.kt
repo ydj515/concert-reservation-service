@@ -16,7 +16,7 @@ import io.hhplus.concertreservationservice.domain.user.service.UserService
 import org.springframework.stereotype.Component
 
 @Component
-class ConcertUseCase(
+class ConcertFacade(
     private val concertService: ConcertService,
     private val userService: UserService,
     private val tokenService: TokenService,
