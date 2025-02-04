@@ -4,6 +4,7 @@ import io.hhplus.concertreservationservice.application.facade.token.request.Crea
 import io.hhplus.concertreservationservice.application.facade.token.request.ReservationTokenStatusCriteria
 import io.hhplus.concertreservationservice.application.facade.token.response.CreateReservationTokenResult
 import io.hhplus.concertreservationservice.application.facade.token.response.ReservationTokenStatusResult
+import io.hhplus.concertreservationservice.domain.token.service.TokenProvider
 import io.hhplus.concertreservationservice.domain.token.service.TokenService
 import io.hhplus.concertreservationservice.domain.token.service.request.CreateTokenCommand
 import io.hhplus.concertreservationservice.domain.token.service.request.TokenStatusCommand
@@ -13,7 +14,7 @@ import io.hhplus.concertreservationservice.domain.user.service.UserService
 import org.springframework.stereotype.Component
 
 @Component
-class TokenUseCase(
+class TokenFacade(
     private val tokenProvider: TokenProvider,
     private val tokenService: TokenService,
     private val userService: UserService,

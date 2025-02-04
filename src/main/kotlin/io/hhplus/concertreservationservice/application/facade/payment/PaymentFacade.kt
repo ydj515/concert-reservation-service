@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class PaymentUseCase(
+class PaymentFacade(
     private val userService: UserService,
     private val tokenService: TokenService,
     private val paymentService: PaymentService,

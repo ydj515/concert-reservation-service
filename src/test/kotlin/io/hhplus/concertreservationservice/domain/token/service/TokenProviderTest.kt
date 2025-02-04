@@ -1,4 +1,4 @@
-package io.hhplus.concertreservationservice.application.facade.token
+package io.hhplus.concertreservationservice.domain.token.service
 
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts

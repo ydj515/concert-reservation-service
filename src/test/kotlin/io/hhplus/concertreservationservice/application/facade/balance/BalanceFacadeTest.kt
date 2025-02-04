@@ -2,12 +2,12 @@ package io.hhplus.concertreservationservice.application.facade.balance
 
 import io.hhplus.concertreservationservice.application.facade.balance.request.ChargeBalanceCriteria
 import io.hhplus.concertreservationservice.application.facade.balance.request.FetchBalanceCriteria
-import io.hhplus.concertreservationservice.application.facade.token.TokenProvider
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.balance.service.BalanceService
 import io.hhplus.concertreservationservice.domain.balance.service.request.FetchBalanceCommand
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.token.exception.TokenNotFoundException
+import io.hhplus.concertreservationservice.domain.token.service.TokenProvider
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
@@ -24,8 +24,8 @@ import java.util.concurrent.Executors
 
 @ActiveProfiles("integration-test")
 @SpringBootTest
-class BalanceUseCaseTest(
-    private val balanceUseCase: BalanceUseCase,
+class BalanceFacadeTest(
+    private val balanceFacade: BalanceFacade,
     private val balanceService: BalanceService,
     private val tokenProvider: TokenProvider,
     private val userJpaRepository: UserJpaRepository,
@@ -58,8 +58,8 @@ class BalanceUseCaseTest(
             val initialBalance = balanceService.getBalance(FetchBalanceCommand(user.id)).amount.amount
 
             `when`("잔액을 충전하고 조회하면") {
-                balanceUseCase.chargeBalance(ChargeBalanceCriteria(Money(chargeAmount), token))
-                val fetchResult = balanceUseCase.getBalance(FetchBalanceCriteria(token))
+                balanceFacade.chargeBalance(ChargeBalanceCriteria(Money(chargeAmount), token))
+                val fetchResult = balanceFacade.getBalance(FetchBalanceCriteria(token))
 
                 then("잔액에 충전 금액이 반영된다") {
                     fetchResult.balance.amount shouldBe initialBalance + chargeAmount
@@ -73,7 +73,7 @@ class BalanceUseCaseTest(
             `when`("잔액 조회를 시도하면") {
                 then("예외가 발생한다") {
                     shouldThrow<TokenNotFoundException> {
-                        balanceUseCase.getBalance(FetchBalanceCriteria(invalidToken))
+                        balanceFacade.getBalance(FetchBalanceCriteria(invalidToken))
                     }
                 }
             }
@@ -105,7 +105,7 @@ class BalanceUseCaseTest(
                 for (i in 1..threadCount) {
                     executor.submit {
                         try {
-                            balanceUseCase.chargeBalance(ChargeBalanceCriteria(Money(chargeAmount), token))
+                            balanceFacade.chargeBalance(ChargeBalanceCriteria(Money(chargeAmount), token))
                         } finally {
                             latch.countDown()
                         }
@@ -115,7 +115,7 @@ class BalanceUseCaseTest(
                 latch.await()
                 executor.shutdown()
 
-                val finalBalance = balanceUseCase.getBalance(FetchBalanceCriteria(token)).balance
+                val finalBalance = balanceFacade.getBalance(FetchBalanceCriteria(token)).balance
 
                 then("충전 요청의 총합이 최종 잔액에 반영된다") {
                     finalBalance.amount shouldBe initialBalance + (chargeAmount * threadCount)

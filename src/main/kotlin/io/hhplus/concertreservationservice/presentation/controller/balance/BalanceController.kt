@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.balance
 
-import io.hhplus.concertreservationservice.application.facade.balance.BalanceUseCase
+import io.hhplus.concertreservationservice.application.facade.balance.BalanceFacade
 import io.hhplus.concertreservationservice.application.facade.balance.request.ChargeBalanceCriteria
 import io.hhplus.concertreservationservice.application.facade.balance.request.FetchBalanceCriteria
 import io.hhplus.concertreservationservice.application.facade.balance.response.toResponse
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/balance")
 class BalanceController(
-    private val balanceUsecase: BalanceUseCase,
+    private val balanceUsecase: BalanceFacade,
 ) {
     @Operation(
         summary = "잔액 충전",

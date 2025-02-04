@@ -1,7 +1,6 @@
 package io.hhplus.concertreservationservice.application.facade.concert
 
 import io.hhplus.concertreservationservice.application.facade.concert.request.SeatReserveCriteria
-import io.hhplus.concertreservationservice.application.facade.token.TokenProvider
 import io.hhplus.concertreservationservice.domain.DateRange
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
@@ -11,6 +10,7 @@ import io.hhplus.concertreservationservice.domain.concert.ScheduleSeat
 import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.SeatType
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
+import io.hhplus.concertreservationservice.domain.token.service.TokenProvider
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ConcertJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.PlaceJpaRepository
@@ -34,8 +34,8 @@ import java.util.concurrent.atomic.AtomicInteger
 
 @ActiveProfiles("integration-test")
 @SpringBootTest
-class ConcertUseCaseTest(
-    private val concertUseCase: ConcertUseCase,
+class ConcertFacadeTest(
+    private val concertFacade: ConcertFacade,
     private val tokenProvider: TokenProvider,
     private val seatReservationJpaRepository: SeatReservationJpaRepository,
     private val seatJpaRepository: SeatJpaRepository,
@@ -108,7 +108,7 @@ class ConcertUseCaseTest(
             )
             `when`("해당 좌석을 예약한다면") {
                 val seatReserveCriteria = SeatReserveCriteria(concert.id, schedule.id, seatNo, token)
-                val result = concertUseCase.reserveSeat(seatReserveCriteria)
+                val result = concertFacade.reserveSeat(seatReserveCriteria)
                 then("예약에 성공한다") {
                     val reservedSeat = seatReservationJpaRepository.findById(result.reservationId)
                     reservedSeat shouldNotBe null
@@ -127,7 +127,7 @@ class ConcertUseCaseTest(
                 for (i in 1..threadCount) {
                     executor.submit {
                         try {
-                            concertUseCase.reserveSeat(seatReserveCriteria)
+                            concertFacade.reserveSeat(seatReserveCriteria)
                             successfulApplications.incrementAndGet()
                         } catch (e: Exception) {
                             failApplications.incrementAndGet()

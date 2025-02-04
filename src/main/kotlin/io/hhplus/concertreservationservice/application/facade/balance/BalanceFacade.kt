@@ -14,7 +14,7 @@ import io.hhplus.concertreservationservice.domain.token.service.request.TokenSta
 import org.springframework.stereotype.Component
 
 @Component
-class BalanceUseCase(
+class BalanceFacade(
     private val balanceService: BalanceService,
     private val tokenService: TokenService,
 ) {

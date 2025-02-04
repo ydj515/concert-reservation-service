@@ -1,6 +1,6 @@
 package io.hhplus.concertreservationservice.presentation.controller.payment
 
-import io.hhplus.concertreservationservice.application.facade.payment.PaymentUseCase
+import io.hhplus.concertreservationservice.application.facade.payment.PaymentFacade
 import io.hhplus.concertreservationservice.application.facade.payment.request.ProcessPaymentCriteria
 import io.hhplus.concertreservationservice.application.facade.payment.response.toResponse
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/payment")
 class PaymentController(
-    private val paymentUseCase: PaymentUseCase,
+    private val paymentFacade: PaymentFacade,
 ) {
     @Operation(
         summary = "결제 진행",
@@ -38,7 +38,7 @@ class PaymentController(
         @RequestBody paymentRequest: PaymentRequest,
     ): PaymentResponse {
         val criteria = ProcessPaymentCriteria(token, paymentRequest.reservationId, paymentRequest.amount)
-        val result = paymentUseCase.processPayment(criteria)
+        val result = paymentFacade.processPayment(criteria)
         return result.toResponse()
     }
 }

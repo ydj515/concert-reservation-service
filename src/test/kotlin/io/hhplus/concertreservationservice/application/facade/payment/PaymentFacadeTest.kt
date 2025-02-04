@@ -1,7 +1,6 @@
 package io.hhplus.concertreservationservice.application.facade.payment
 
 import io.hhplus.concertreservationservice.application.facade.payment.request.ProcessPaymentCriteria
-import io.hhplus.concertreservationservice.application.facade.token.TokenProvider
 import io.hhplus.concertreservationservice.domain.DateRange
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
@@ -15,6 +14,7 @@ import io.hhplus.concertreservationservice.domain.payment.service.PaymentService
 import io.hhplus.concertreservationservice.domain.reservation.SeatReservation
 import io.hhplus.concertreservationservice.domain.reservation.service.ReservationService
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
+import io.hhplus.concertreservationservice.domain.token.service.TokenProvider
 import io.hhplus.concertreservationservice.domain.token.service.TokenService
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.domain.user.exception.InsufficientBalanceException
@@ -43,8 +43,8 @@ import java.util.concurrent.atomic.AtomicInteger
 
 @ActiveProfiles("integration-test")
 @SpringBootTest
-class PaymentUseCaseTest(
-    private val paymentUseCase: PaymentUseCase,
+class PaymentFacadeTest(
+    private val paymentFacade: PaymentFacade,
     private val userService: UserService,
     private val tokenService: TokenService,
     private val paymentService: PaymentService,
@@ -132,7 +132,7 @@ class PaymentUseCaseTest(
 
             `when`("결제를 진행하면") {
                 val criteria = ProcessPaymentCriteria(token, savedReservation.id, 50000)
-                val result = paymentUseCase.processPayment(criteria)
+                val result = paymentFacade.processPayment(criteria)
                 then("결제에 성공한다.") {
                     val savedPayment = paymentJpaRepository.findById(result.paymentId)
 
@@ -153,7 +153,7 @@ class PaymentUseCaseTest(
                 for (i in 1..threadCount) {
                     executor.submit {
                         try {
-                            paymentUseCase.processPayment(criteria)
+                            paymentFacade.processPayment(criteria)
                             successfulApplications.incrementAndGet()
                         } catch (e: Exception) {
                             failApplications.incrementAndGet()
@@ -234,7 +234,7 @@ class PaymentUseCaseTest(
                 val criteria = ProcessPaymentCriteria(token, savedReservation.id, 50000)
                 val exception =
                     shouldThrow<InsufficientBalanceException> {
-                        paymentUseCase.processPayment(criteria)
+                        paymentFacade.processPayment(criteria)
                     }
 
                 then("InsufficientBalanceException이 발생한다") {
