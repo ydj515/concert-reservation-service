@@ -12,28 +12,28 @@ import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.startWith
 import java.util.Date
 
-class TokenProviderTest : FunSpec({
+class JwtTokenProviderTest : FunSpec({
 
     val secretKey =
         "hihellohihellohihellohihellohihellohihellohihellohihellohihellohihello" +
             "hihellohihellohihellohihellohihellohihellohihellohihellohihellohihello" +
             "hihellohihellohihellohihellohihellohihello"
     val accessTokenExpiration = 1000L * 60 * 60 // 1 시간
-    val tokenProvider = TokenProvider(secretKey, accessTokenExpiration)
+    val jwtTokenProvider = JwtTokenProvider(secretKey, accessTokenExpiration)
 
     context("토큰 생성 및 검증") {
         val userId = 123L
 
         test("토큰이 성공적으로 생성되어야 한다") {
-            val token = tokenProvider.generateToken(userId)
+            val token = jwtTokenProvider.generateToken(userId)
 
             token shouldNotBe null
             token should startWith("eyJhbGciOiJIUzUxMiJ9") // header
         }
 
         test("생성된 토큰은 성공적으로 검증되어야 한다") {
-            val token = tokenProvider.generateToken(userId)
-            val isValid = tokenProvider.validateToken(token)
+            val token = jwtTokenProvider.generateToken(userId)
+            val isValid = jwtTokenProvider.validateToken(token)
 
             isValid shouldBe true
         }
@@ -42,7 +42,7 @@ class TokenProviderTest : FunSpec({
             val invalidToken = "invalid.token.string"
 
             shouldThrow<JwtException> {
-                tokenProvider.validateToken(invalidToken)
+                jwtTokenProvider.validateToken(invalidToken)
             }
         }
 
@@ -58,7 +58,7 @@ class TokenProviderTest : FunSpec({
                     .compact()
 
             shouldThrow<JwtException> {
-                tokenProvider.validateToken(expiredToken)
+                jwtTokenProvider.validateToken(expiredToken)
             }
         }
 
@@ -66,7 +66,7 @@ class TokenProviderTest : FunSpec({
             val unsupportedToken = "unsupported.token.format"
 
             shouldThrow<JwtException> {
-                tokenProvider.validateToken(unsupportedToken)
+                jwtTokenProvider.validateToken(unsupportedToken)
             }
         }
     }

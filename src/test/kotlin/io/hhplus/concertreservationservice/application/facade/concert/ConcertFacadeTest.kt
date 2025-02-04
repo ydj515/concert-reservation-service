@@ -1,6 +1,7 @@
 package io.hhplus.concertreservationservice.application.facade.concert
 
 import io.hhplus.concertreservationservice.application.facade.concert.request.SeatReserveCriteria
+import io.hhplus.concertreservationservice.application.helper.TokenProvider
 import io.hhplus.concertreservationservice.domain.DateRange
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.concert.Concert
@@ -10,7 +11,6 @@ import io.hhplus.concertreservationservice.domain.concert.ScheduleSeat
 import io.hhplus.concertreservationservice.domain.concert.Seat
 import io.hhplus.concertreservationservice.domain.concert.SeatType
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
-import io.hhplus.concertreservationservice.domain.token.service.TokenProvider
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ConcertJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.PlaceJpaRepository
@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger
 @SpringBootTest
 class ConcertFacadeTest(
     private val concertFacade: ConcertFacade,
-    private val tokenProvider: TokenProvider,
+    private val jwtTokenProvider: TokenProvider,
     private val seatReservationJpaRepository: SeatReservationJpaRepository,
     private val seatJpaRepository: SeatJpaRepository,
     private val placeJpaRepository: PlaceJpaRepository,
@@ -98,7 +98,7 @@ class ConcertFacadeTest(
             // 예약을 시작할 수 있도록 설정
             val seat = seatJpaRepository.save(Seat(no = seatNo, scheduleSeat = scheduleSeat))
 
-            val token = tokenProvider.generateToken(user.id)
+            val token = jwtTokenProvider.generateToken(user.id)
             tokenJpaRepository.save(
                 ReservationToken(
                     expiredAt = LocalDateTime.now(),

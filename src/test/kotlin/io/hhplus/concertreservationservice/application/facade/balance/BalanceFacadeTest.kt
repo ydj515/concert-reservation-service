@@ -2,12 +2,12 @@ package io.hhplus.concertreservationservice.application.facade.balance
 
 import io.hhplus.concertreservationservice.application.facade.balance.request.ChargeBalanceCriteria
 import io.hhplus.concertreservationservice.application.facade.balance.request.FetchBalanceCriteria
+import io.hhplus.concertreservationservice.application.helper.TokenProvider
 import io.hhplus.concertreservationservice.domain.balance.Money
 import io.hhplus.concertreservationservice.domain.balance.service.BalanceService
 import io.hhplus.concertreservationservice.domain.balance.service.request.FetchBalanceCommand
 import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.token.exception.TokenNotFoundException
-import io.hhplus.concertreservationservice.domain.token.service.TokenProvider
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
@@ -27,7 +27,7 @@ import java.util.concurrent.Executors
 class BalanceFacadeTest(
     private val balanceFacade: BalanceFacade,
     private val balanceService: BalanceService,
-    private val tokenProvider: TokenProvider,
+    private val jwtTokenProvider: TokenProvider,
     private val userJpaRepository: UserJpaRepository,
     private val seatReservationJpaRepository: SeatReservationJpaRepository,
     private val tokenJpaRepository: ReservationTokenJpaRepository,
@@ -46,7 +46,7 @@ class BalanceFacadeTest(
                         name = "testUser",
                     ),
                 )
-            val token = tokenProvider.generateToken(user.id)
+            val token = jwtTokenProvider.generateToken(user.id)
             tokenJpaRepository.save(
                 ReservationToken(
                     expiredAt = LocalDateTime.now(),
@@ -86,7 +86,7 @@ class BalanceFacadeTest(
                         name = "testUser",
                     ),
                 )
-            val token = tokenProvider.generateToken(user.id)
+            val token = jwtTokenProvider.generateToken(user.id)
             tokenJpaRepository.save(
                 ReservationToken(
                     expiredAt = LocalDateTime.now().plusDays(1),

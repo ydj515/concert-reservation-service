@@ -1,5 +1,6 @@
 package io.hhplus.concertreservationservice.domain.token.service
 
+import io.hhplus.concertreservationservice.application.helper.TokenProvider
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
@@ -15,10 +16,10 @@ import java.util.Date
 
 @PropertySource("classpath:jwt.yml")
 @Component
-class TokenProvider(
+class JwtTokenProvider(
     @Value("\${secret-key}") secretKey: String,
     @Value("\${access-token-expiration}") private val accessTokenExpiration: Long,
-) {
+) : TokenProvider {
     private val key: Key
 
     init {
@@ -27,7 +28,7 @@ class TokenProvider(
     }
 
     // 토큰 생성
-    fun generateToken(userId: Long): String {
+    override fun generateToken(userId: Long): String {
         return Jwts.builder()
             .setSubject(userId.toString())
             .setIssuedAt(Date())
@@ -37,7 +38,7 @@ class TokenProvider(
     }
 
     // 토큰 검증
-    fun validateToken(token: String): Boolean {
+    override fun validateToken(token: String): Boolean {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
         } catch (e: SecurityException) {

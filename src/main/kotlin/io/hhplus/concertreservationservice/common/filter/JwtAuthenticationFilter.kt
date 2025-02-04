@@ -1,7 +1,7 @@
 package io.hhplus.concertreservationservice.common.filter
 
+import io.hhplus.concertreservationservice.application.helper.TokenProvider
 import io.hhplus.concertreservationservice.domain.token.exception.InvalidTokenException
-import io.hhplus.concertreservationservice.domain.token.service.TokenProvider
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 
 @Component
 class JwtAuthenticationFilter(
-    private val tokenProvider: TokenProvider,
+    private val jwtTokenProvider: TokenProvider,
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -24,7 +24,7 @@ class JwtAuthenticationFilter(
         val token = resolveToken(request)
 
         try {
-            if (!tokenProvider.validateToken(token)) {
+            if (!jwtTokenProvider.validateToken(token)) {
                 throw InvalidTokenException()
             }
 
