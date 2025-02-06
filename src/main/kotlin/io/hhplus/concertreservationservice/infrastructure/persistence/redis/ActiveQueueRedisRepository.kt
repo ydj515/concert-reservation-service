@@ -42,6 +42,29 @@ class ActiveQueueRedisRepository(
         return sum
     }
 
+    // 활성화된 토큰들 중 만료된 토큰 삭제
+    fun removeExpiredTokens(currentTime: LocalDateTime): Int {
+        val allTokens = redisTemplate.opsForSet().members(CONCERT_ACTIVATE_QUEUE) ?: emptySet()
+
+        val expiredTokensCount =
+            allTokens.filter { token ->
+                // ":" 기준으로 토큰과 만료 시간을 분리
+                val tokenParts = token.toString().split(":")
+                val expiredAt = tokenParts[2].toLong()
+                val aa = longToLocalDateTime(expiredAt)
+                val currentTimeLong = currentTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+
+                expiredAt < currentTimeLong
+            }.also { expiredTokens ->
+                // 만료된 토큰을 제거
+                if (expiredTokens.isNotEmpty()) {
+                    redisTemplate.opsForSet().remove(CONCERT_ACTIVATE_QUEUE, *expiredTokens.toTypedArray())
+                }
+            }.size
+
+        return expiredTokensCount
+    }
+
     // 전체 삭제
     fun deleteAll() {
         redisTemplate.delete(CONCERT_ACTIVATE_QUEUE)

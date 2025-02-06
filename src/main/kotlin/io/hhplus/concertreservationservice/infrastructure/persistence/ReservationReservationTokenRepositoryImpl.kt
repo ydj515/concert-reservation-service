@@ -27,8 +27,8 @@ class ReservationReservationTokenRepositoryImpl(
         return reservationTokenJpaRepository.findByToken(command.token)
     }
 
-    override fun getExpiredToken(currentTime: LocalDateTime): List<ReservationToken> {
-        return reservationTokenJpaRepository.findByExpiredAtBefore(currentTime)
+    override fun removeExpiredActiveTokens(currentTime: LocalDateTime): Int {
+        return activeQueueRedisRepository.removeExpiredTokens(currentTime)
     }
 
     override fun deleteTokens(tokens: List<ReservationToken>) {

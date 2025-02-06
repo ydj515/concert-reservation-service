@@ -21,10 +21,6 @@ class TokenDeactivationJob(
     }
 
     fun deactivateTokens(currentTime: LocalDateTime) {
-        val reservations = tokenRepository.getExpiredToken(currentTime)
-        if (reservations.isNotEmpty()) {
-            tokenRepository.deleteTokens(reservations)
-            logger.info("Token deactivation completed successfully")
-        }
+        tokenRepository.removeExpiredActiveTokens(currentTime)
     }
 }
