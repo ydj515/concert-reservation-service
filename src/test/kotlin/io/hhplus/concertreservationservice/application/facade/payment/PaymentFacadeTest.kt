@@ -28,6 +28,7 @@ import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.Schedu
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.UserJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.ActiveQueueRedisRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -59,6 +60,7 @@ class PaymentFacadeTest(
     private val scheduleJpaRepository: ScheduleJpaRepository,
     private val paymentJpaRepository: PaymentJpaRepository,
     private val tokenJpaRepository: ReservationTokenJpaRepository,
+    private val activeQueueRedisRepository: ActiveQueueRedisRepository,
 ) : BehaviorSpec({
         afterEach {
             paymentJpaRepository.deleteAllInBatch()
@@ -70,6 +72,7 @@ class PaymentFacadeTest(
             placeJpaRepository.deleteAllInBatch()
             tokenJpaRepository.deleteAllInBatch()
             userJpaRepository.deleteAllInBatch()
+            activeQueueRedisRepository.deleteAll()
         }
 
         given("유효한 토큰과 예약ID, 결제 금액이 주어졌을 때") {
@@ -113,13 +116,16 @@ class PaymentFacadeTest(
             val seat = seatJpaRepository.save(Seat(no = seatNo, scheduleSeat = scheduleSeat))
 
             val token = jwtTokenProvider.generateToken(user.id)
-            tokenJpaRepository.save(
-                ReservationToken(
-                    expiredAt = LocalDateTime.now(),
-                    token = token,
-                    userId = user.id,
-                ),
-            )
+            val reservationToken =
+                tokenJpaRepository.save(
+                    ReservationToken(
+                        expiredAt = LocalDateTime.now(),
+                        token = token,
+                        userId = user.id,
+                    ),
+                )
+
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             val seatReservation =
                 SeatReservation(
@@ -213,13 +219,16 @@ class PaymentFacadeTest(
             val seat = seatJpaRepository.save(Seat(no = seatNo, scheduleSeat = scheduleSeat))
 
             val token = jwtTokenProvider.generateToken(user.id)
-            tokenJpaRepository.save(
-                ReservationToken(
-                    expiredAt = LocalDateTime.now(),
-                    token = token,
-                    userId = user.id,
-                ),
-            )
+            val reservationToken =
+                tokenJpaRepository.save(
+                    ReservationToken(
+                        expiredAt = LocalDateTime.now(),
+                        token = token,
+                        userId = user.id,
+                    ),
+                )
+
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             val seatReservation =
                 SeatReservation(

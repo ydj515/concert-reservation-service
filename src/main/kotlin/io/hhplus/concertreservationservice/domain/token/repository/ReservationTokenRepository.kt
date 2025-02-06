@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 interface ReservationTokenRepository {
     fun saveToken(token: ReservationToken): ReservationToken
 
-    fun getToken(command: TokenStatusCommand): ReservationToken?
+    fun findToken(command: TokenStatusCommand): ReservationToken?
 
     fun getExpiredToken(currentTime: LocalDateTime): List<ReservationToken>
 
