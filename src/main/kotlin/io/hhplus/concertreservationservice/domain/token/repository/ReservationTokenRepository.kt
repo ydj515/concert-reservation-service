@@ -11,7 +11,7 @@ interface ReservationTokenRepository {
 
     fun findToken(command: TokenStatusCommand): ReservationToken?
 
-    fun getExpiredToken(currentTime: LocalDateTime): List<ReservationToken>
+    fun findRankWaitingToken(command: TokenStatusCommand): Long?
 
     fun removeExpiredActiveTokens(currentTime: LocalDateTime): Int
 
