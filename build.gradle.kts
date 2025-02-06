@@ -36,6 +36,7 @@ dependencies {
     // redis
     // https://redisson.org/docs/integration-with-spring/#spring-boot-starter
     implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     // db
     testRuntimeOnly("com.h2database:h2")
