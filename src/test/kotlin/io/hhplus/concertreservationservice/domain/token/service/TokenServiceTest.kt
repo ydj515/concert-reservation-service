@@ -58,7 +58,7 @@ class TokenServiceTest : BehaviorSpec({
                 userId = 1L,
             )
 
-        every { reservationTokenRepository.getToken(command) } returns token
+        every { reservationTokenRepository.findToken(command) } returns token
 
         `when`("토큰을 조회하면") {
             val result = tokenService.getToken(command)
@@ -70,12 +70,12 @@ class TokenServiceTest : BehaviorSpec({
             }
 
             then("토큰을 조회한 기록이 있어야 한다") {
-                verify(exactly = 1) { reservationTokenRepository.getToken(command) }
+                verify(exactly = 1) { reservationTokenRepository.findToken(command) }
             }
         }
 
         `when`("없는 토큰을 조회하면") {
-            every { reservationTokenRepository.getToken(command) } returns null
+            every { reservationTokenRepository.findToken(command) } returns null
 
             then("예외가 발생해야 한다") {
                 assertFailsWith<TokenNotFoundException> {

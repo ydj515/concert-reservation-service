@@ -4,11 +4,15 @@ import io.hhplus.concertreservationservice.application.job.ReservationExpireJob
 import io.hhplus.concertreservationservice.application.job.TokenActivationJob
 import io.hhplus.concertreservationservice.application.job.TokenDeactivationJob
 import io.hhplus.concertreservationservice.domain.balance.Money
+import io.hhplus.concertreservationservice.domain.token.ReservationToken
+import io.hhplus.concertreservationservice.domain.token.TokenStatus
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.PaymentJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.UserJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.ActiveQueueRedisRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.WaitingQueueRedisRepository
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.balance.request.BalanceChargeRequest
 import io.hhplus.concertreservationservice.presentation.controller.concert.request.ReservationSeatRequest
@@ -28,6 +32,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ActiveProfiles
+import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -42,6 +47,8 @@ class PaymentIntegrationControllerTest(
     private val reservationJpaRepository: SeatReservationJpaRepository,
     private val paymentJpaRepository: PaymentJpaRepository,
     private val userJpaRepository: UserJpaRepository,
+    private val activeQueueRedisRepository: ActiveQueueRedisRepository,
+    private val waitingQueueRedisRepository: WaitingQueueRedisRepository,
 ) : StringSpec({
 
         val reservationExpireJob = mockk<ReservationExpireJob>()
@@ -63,6 +70,8 @@ class PaymentIntegrationControllerTest(
             paymentJpaRepository.deleteAllInBatch()
             reservationJpaRepository.deleteAllInBatch()
             userJpaRepository.save(User(userId, "test1", Money(0)))
+            activeQueueRedisRepository.deleteAll()
+            waitingQueueRedisRepository.deleteAll()
         }
 
         "유효한 토큰을 가지고 결제를 진행하면 결제가 완료된다." {
@@ -83,6 +92,15 @@ class PaymentIntegrationControllerTest(
                     .body("data.token", notNullValue())
                     .extract()
                     .path("data.token")
+
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             val userBalanceAmount: Long =
                 given()
@@ -139,6 +157,15 @@ class PaymentIntegrationControllerTest(
                     .body("data.token", notNullValue())
                     .extract()
                     .path("data.token")
+
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             val userBalanceAmount: Long =
                 given()
@@ -234,6 +261,15 @@ class PaymentIntegrationControllerTest(
                     .extract()
                     .path("data.token")
 
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
+
             val reservationId: Long =
                 given()
                     .contentType(ContentType.JSON)
@@ -258,7 +294,6 @@ class PaymentIntegrationControllerTest(
         }
 
         "유효한 요청이지만 잔액이 모자랄 경우 결제 요청하면 결제에 실패한다." {
-
             val concertId = 1L
             val scheduleId = 1L
             val seatNo = 1
@@ -275,6 +310,15 @@ class PaymentIntegrationControllerTest(
                     .body("data.token", notNullValue())
                     .extract()
                     .path("data.token")
+
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             val reservationId: Long =
                 given()

@@ -3,8 +3,12 @@ package io.hhplus.concertreservationservice.presentation.controller.concert
 import io.hhplus.concertreservationservice.application.job.ReservationExpireJob
 import io.hhplus.concertreservationservice.application.job.TokenActivationJob
 import io.hhplus.concertreservationservice.application.job.TokenDeactivationJob
+import io.hhplus.concertreservationservice.domain.token.ReservationToken
+import io.hhplus.concertreservationservice.domain.token.TokenStatus
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.ActiveQueueRedisRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.WaitingQueueRedisRepository
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.concert.request.ReservationSeatRequest
 import io.hhplus.concertreservationservice.presentation.controller.token.request.ReservationTokenCreateRequest
@@ -21,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ActiveProfiles
+import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -33,6 +38,8 @@ class ConcertReservationIntegrationControllerTest(
     @LocalServerPort val port: Int,
     private val tokenJpaRepository: ReservationTokenJpaRepository,
     private val reservationJpaRepository: SeatReservationJpaRepository,
+    private val activeQueueRedisRepository: ActiveQueueRedisRepository,
+    private val waitingQueueRedisRepository: WaitingQueueRedisRepository,
 ) : StringSpec({
 
         val reservationExpireJob = mockk<ReservationExpireJob>()
@@ -49,6 +56,8 @@ class ConcertReservationIntegrationControllerTest(
         afterTest {
             tokenJpaRepository.deleteAllInBatch()
             reservationJpaRepository.deleteAllInBatch()
+            waitingQueueRedisRepository.deleteAll()
+            activeQueueRedisRepository.deleteAll()
         }
 
         "유효한 요청으로 좌석을 에약하면 예약ID와 예약한 좌석 번호를 응답받는다." {
@@ -68,6 +77,15 @@ class ConcertReservationIntegrationControllerTest(
                     .body("data.token", notNullValue())
                     .extract()
                     .path("data.token")
+
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             given()
                 .contentType(ContentType.JSON)
@@ -99,6 +117,15 @@ class ConcertReservationIntegrationControllerTest(
                     .body("data.token", notNullValue())
                     .extract()
                     .path("data.token")
+
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             val threadCount = 10
             val latch = CountDownLatch(threadCount)

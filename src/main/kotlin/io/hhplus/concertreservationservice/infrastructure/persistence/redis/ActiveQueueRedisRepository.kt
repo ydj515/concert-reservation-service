@@ -27,6 +27,28 @@ class ActiveQueueRedisRepository(
         return redisTemplate.opsForSet().size(CONCERT_ACTIVATE_QUEUE)?.toInt() ?: 0
     }
 
+    fun findToken(command: TokenStatusCommand): ReservationToken? {
+        val cursor =
+            redisTemplate.opsForSet()
+                .scan(CONCERT_ACTIVATE_QUEUE, ScanOptions.scanOptions().match("*").count(100).build())
+
+        cursor.use {
+            while (cursor.hasNext()) {
+                val value = cursor.next()
+                if (value.toString().startsWith(command.token)) {
+                    val tokenParts = value.toString().split(":")
+                    return ReservationToken(
+                        token = tokenParts[0],
+                        status = TokenStatus.ACTIVE,
+                        userId = tokenParts[1].toLong(),
+                        expiredAt = longToLocalDateTime(tokenParts[2].toLong()),
+                    )
+                }
+            }
+        }
+        return null
+    }
+
     // 활성화
     fun active(
         tokens: List<ReservationToken>,
