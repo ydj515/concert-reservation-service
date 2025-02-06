@@ -30,12 +30,10 @@ class TokenActivationJob(
         if (tokensToActivate > 0) {
             val waitingTokens =
                 tokenRepository.getWaitingTokensForActivation(
-                    TokenStatus.WAITING,
                     PageRequest.of(0, tokensToActivate),
                 )
 
-            val idsToActivate = waitingTokens.map { it.id }
-            tokenRepository.updateTokenStatus(idsToActivate, TokenStatus.ACTIVE)
+            tokenRepository.updateToActiveStatus(waitingTokens, currentTime)
         }
     }
 }
