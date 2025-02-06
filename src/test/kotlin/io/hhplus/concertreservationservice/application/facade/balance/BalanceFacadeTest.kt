@@ -12,6 +12,7 @@ import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.UserJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.ActiveQueueRedisRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -31,12 +32,14 @@ class BalanceFacadeTest(
     private val userJpaRepository: UserJpaRepository,
     private val seatReservationJpaRepository: SeatReservationJpaRepository,
     private val tokenJpaRepository: ReservationTokenJpaRepository,
+    private val activeQueueRedisRepository: ActiveQueueRedisRepository,
 ) : BehaviorSpec({
 
         afterEach {
             tokenJpaRepository.deleteAllInBatch()
             seatReservationJpaRepository.deleteAllInBatch()
             userJpaRepository.deleteAllInBatch()
+            activeQueueRedisRepository.deleteAll()
         }
 
         given("유효한 토큰과 금액이 주어졌을 때") {
@@ -47,13 +50,16 @@ class BalanceFacadeTest(
                     ),
                 )
             val token = jwtTokenProvider.generateToken(user.id)
-            tokenJpaRepository.save(
-                ReservationToken(
-                    expiredAt = LocalDateTime.now(),
-                    token = token,
-                    userId = user.id,
-                ),
-            )
+            val reservationToken =
+                tokenJpaRepository.save(
+                    ReservationToken(
+                        expiredAt = LocalDateTime.now(),
+                        token = token,
+                        userId = user.id,
+                    ),
+                )
+
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
             val chargeAmount = 1000L
             val initialBalance = balanceService.getBalance(FetchBalanceCommand(user.id)).amount.amount
 
@@ -87,13 +93,16 @@ class BalanceFacadeTest(
                     ),
                 )
             val token = jwtTokenProvider.generateToken(user.id)
-            tokenJpaRepository.save(
-                ReservationToken(
-                    expiredAt = LocalDateTime.now().plusDays(1),
-                    token = token,
-                    userId = user.id,
-                ),
-            )
+            val reservationToken =
+                tokenJpaRepository.save(
+                    ReservationToken(
+                        expiredAt = LocalDateTime.now().plusDays(1),
+                        token = token,
+                        userId = user.id,
+                    ),
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
+
             val initialBalance = balanceService.getBalance(FetchBalanceCommand(user.id)).amount.amount
             val chargeAmount = 100L
             val threadCount = 10

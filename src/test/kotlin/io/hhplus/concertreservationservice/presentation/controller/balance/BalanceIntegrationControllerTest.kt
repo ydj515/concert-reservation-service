@@ -3,7 +3,11 @@ package io.hhplus.concertreservationservice.presentation.controller.balance
 import io.hhplus.concertreservationservice.application.job.ReservationExpireJob
 import io.hhplus.concertreservationservice.application.job.TokenActivationJob
 import io.hhplus.concertreservationservice.application.job.TokenDeactivationJob
+import io.hhplus.concertreservationservice.domain.token.ReservationToken
+import io.hhplus.concertreservationservice.domain.token.TokenStatus
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.ActiveQueueRedisRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.WaitingQueueRedisRepository
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.balance.request.BalanceChargeRequest
 import io.hhplus.concertreservationservice.presentation.controller.token.request.ReservationTokenCreateRequest
@@ -19,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ActiveProfiles
+import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -30,6 +35,8 @@ import java.util.concurrent.atomic.AtomicInteger
 class BalanceIntegrationControllerTest(
     @LocalServerPort val port: Int,
     private val tokenJpaRepository: ReservationTokenJpaRepository,
+    private val activeQueueRedisRepository: ActiveQueueRedisRepository,
+    private val waitingQueueRedisRepository: WaitingQueueRedisRepository,
 ) : StringSpec({
 
         val reservationExpireJob = mockk<ReservationExpireJob>()
@@ -45,6 +52,8 @@ class BalanceIntegrationControllerTest(
         }
         afterTest {
             tokenJpaRepository.deleteAllInBatch()
+            activeQueueRedisRepository.deleteAll()
+            waitingQueueRedisRepository.deleteAll()
         }
 
         "유효한 토큰을 가지고 잔액 조회 요청을 하면 user의 잔액을 반환한다." {
@@ -61,6 +70,15 @@ class BalanceIntegrationControllerTest(
                     .body("data.token", notNullValue())
                     .extract()
                     .path("data.token")
+
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             given()
                 .contentType(ContentType.JSON)
@@ -101,6 +119,15 @@ class BalanceIntegrationControllerTest(
                     .extract()
                     .path("data.token")
 
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
+
             val initAmount: Long =
                 given()
                     .contentType(ContentType.JSON)
@@ -140,6 +167,15 @@ class BalanceIntegrationControllerTest(
                     .body("data.token", notNullValue())
                     .extract()
                     .path("data.token")
+
+            val reservationToken =
+                ReservationToken(
+                    userId = userId,
+                    token = token,
+                    expiredAt = LocalDateTime.now().plusHours(1),
+                    status = TokenStatus.WAITING,
+                )
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
 
             val initAmount: Long =
                 given()

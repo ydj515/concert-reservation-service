@@ -23,8 +23,8 @@ class ReservationReservationTokenRepositoryImpl(
         return reservationTokenJpaRepository.save(token)
     }
 
-    override fun getToken(command: TokenStatusCommand): ReservationToken? {
-        return reservationTokenJpaRepository.findByToken(command.token)
+    override fun findToken(command: TokenStatusCommand): ReservationToken? {
+        return activeQueueRedisRepository.findToken(command)
     }
 
     override fun removeExpiredActiveTokens(currentTime: LocalDateTime): Int {

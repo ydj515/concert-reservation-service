@@ -20,6 +20,7 @@ import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.Schedu
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.SeatReservationJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.UserJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.ActiveQueueRedisRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -45,6 +46,7 @@ class ConcertFacadeTest(
     private val scheduleSeatJpaRepository: ScheduleSeatJpaRepository,
     private val scheduleJpaRepository: ScheduleJpaRepository,
     private val tokenJpaRepository: ReservationTokenJpaRepository,
+    private val activeQueueRedisRepository: ActiveQueueRedisRepository,
 ) : BehaviorSpec({
 
         afterEach {
@@ -56,6 +58,7 @@ class ConcertFacadeTest(
             placeJpaRepository.deleteAllInBatch()
             tokenJpaRepository.deleteAllInBatch()
             userJpaRepository.deleteAllInBatch()
+            activeQueueRedisRepository.deleteAll()
         }
 
         given("유효한 토큰과 예약할 좌석 정보가 주어졌을 때") {
@@ -99,13 +102,17 @@ class ConcertFacadeTest(
             val seat = seatJpaRepository.save(Seat(no = seatNo, scheduleSeat = scheduleSeat))
 
             val token = jwtTokenProvider.generateToken(user.id)
-            tokenJpaRepository.save(
-                ReservationToken(
-                    expiredAt = LocalDateTime.now(),
-                    token = token,
-                    userId = user.id,
-                ),
-            )
+            val reservationToken =
+                tokenJpaRepository.save(
+                    ReservationToken(
+                        expiredAt = LocalDateTime.now(),
+                        token = token,
+                        userId = user.id,
+                    ),
+                )
+
+            activeQueueRedisRepository.active(listOf(reservationToken), LocalDateTime.now())
+
             `when`("해당 좌석을 예약한다면") {
                 val seatReserveCriteria = SeatReserveCriteria(concert.id, schedule.id, seatNo, token)
                 val result = concertFacade.reserveSeat(seatReserveCriteria)
