@@ -38,20 +38,17 @@ class ReservationReservationTokenRepositoryImpl(
     }
 
     override fun getActiveTokenCount(status: TokenStatus): Int {
-        return reservationTokenJpaRepository.countByStatus(status)
+        return activeQueueRedisRepository.getTotalCount()
     }
 
-    override fun getWaitingTokensForActivation(
-        status: TokenStatus,
-        pageable: Pageable,
-    ): List<ReservationToken> {
-        return reservationTokenJpaRepository.findWaitingTokensForActivation(status, pageable)
+    override fun getWaitingTokensForActivation(pageable: Pageable): List<ReservationToken> {
+        return waitingQueueRedisRepository.getWaitingTokensForActivation(pageable.pageSize.toLong())
     }
 
-    override fun updateTokenStatus(
-        ids: List<Long>,
-        newStatus: TokenStatus,
+    override fun updateToActiveStatus(
+        tokens: List<ReservationToken>,
+        currentTime: LocalDateTime,
     ): Int {
-        return reservationTokenJpaRepository.updateTokenStatus(ids, newStatus)
+        return activeQueueRedisRepository.active(tokens, currentTime)
     }
 }
