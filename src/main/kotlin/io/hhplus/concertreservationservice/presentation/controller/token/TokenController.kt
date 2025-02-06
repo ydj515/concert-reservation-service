@@ -7,7 +7,7 @@ import io.hhplus.concertreservationservice.application.facade.token.response.toR
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.token.request.ReservationTokenCreateRequest
 import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenCreateResponse
-import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenStatusResponse
+import io.hhplus.concertreservationservice.presentation.controller.token.response.ReservationTokenPollingResponse
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -61,7 +61,7 @@ class TokenController(
     @GetMapping("/status")
     fun getQueueTokenStatus(
         @RequestHeader(RESERVATION_QUEUE_TOKEN) token: String,
-    ): ReservationTokenStatusResponse {
+    ): ReservationTokenPollingResponse {
         val criteria = ReservationTokenStatusCriteria(token)
         val result = tokenFacade.getTokenStatus(criteria)
         return result.toResponse()

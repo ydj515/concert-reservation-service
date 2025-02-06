@@ -8,6 +8,7 @@ import io.hhplus.concertreservationservice.domain.token.repository.ReservationTo
 import io.hhplus.concertreservationservice.domain.token.service.request.CreateTokenCommand
 import io.hhplus.concertreservationservice.domain.token.service.request.TokenStatusCommand
 import io.hhplus.concertreservationservice.domain.token.service.response.CreateTokenInfo
+import io.hhplus.concertreservationservice.domain.token.service.response.TokenPollingInfo
 import io.hhplus.concertreservationservice.domain.token.service.response.TokenStatusInfo
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -33,6 +34,12 @@ class TokenService(
             reservationTokenRepository.findToken(command) ?: throw TokenNotFoundException(command.token)
 
         return reservationToken.toReservationToken()
+    }
+
+    fun getRank(command: TokenStatusCommand): TokenPollingInfo {
+        val rank =
+            reservationTokenRepository.findRankWaitingToken(command) ?: throw TokenNotFoundException(command.token)
+        return TokenPollingInfo(command.token, rank + 1) // 맨 처음이 0부터 시작이라서
     }
 
     fun deleteToken(token: String) {

@@ -27,6 +27,10 @@ class ReservationReservationTokenRepositoryImpl(
         return activeQueueRedisRepository.findToken(command)
     }
 
+    override fun findRankWaitingToken(command: TokenStatusCommand): Long? {
+        return waitingQueueRedisRepository.findRank(command)
+    }
+
     override fun removeExpiredActiveTokens(currentTime: LocalDateTime): Int {
         return activeQueueRedisRepository.removeExpiredTokens(currentTime)
     }
