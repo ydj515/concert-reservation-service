@@ -4,6 +4,8 @@ import io.hhplus.concertreservationservice.domain.token.ReservationToken
 import io.hhplus.concertreservationservice.domain.user.User
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.UserJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.ActiveQueueRedisRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.WaitingQueueRedisRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,15 +17,20 @@ import java.time.LocalDateTime
 class TokenDeactivationJobTest(
     private val tokenDeactivationJob: TokenDeactivationJob,
     private val reservationTokenJpaRepository: ReservationTokenJpaRepository,
+    private val activeQueueRedisRepository: ActiveQueueRedisRepository,
+    private val waitingQueueRedisRepository: WaitingQueueRedisRepository,
     private val userJpaRepository: UserJpaRepository,
 ) : BehaviorSpec({
         afterEach {
             reservationTokenJpaRepository.deleteAllInBatch()
             userJpaRepository.deleteAllInBatch()
+            activeQueueRedisRepository.deleteAll()
+            waitingQueueRedisRepository.deleteAll()
         }
 
         given("user 5명에 만료된 토큰이 존재할때") {
             val issueTokenCount = 5
+            val currentTime = LocalDateTime.now()
 
             val users = mutableListOf<User>()
             for (i in 1..issueTokenCount) {
@@ -45,15 +52,16 @@ class TokenDeactivationJobTest(
                 )
             }
 
-            val savedTokens = reservationTokenJpaRepository.saveAll(tokens)
+            val result = activeQueueRedisRepository.active(tokens, currentTime)
 
             `when`("토큰 비활성화 작업이 실행되면") {
-                tokenDeactivationJob.deactivateTokens(LocalDateTime.now())
+                tokenDeactivationJob.deactivateTokens(currentTime)
 
                 then("대기 중인 토큰이 전부 삭제된다.") {
-                    val allTokens = reservationTokenJpaRepository.findAll()
+                    val waitingTokenCount = waitingQueueRedisRepository.getTotalCount()
 
-                    allTokens.size shouldBe 0
+                    waitingTokenCount shouldBe 0
+                    result shouldBe 5
                 }
             }
         }
@@ -61,6 +69,7 @@ class TokenDeactivationJobTest(
         given("user 20 명중 만료된 토큰은 5개, 유효한 토큰은 15개일때") {
             val validTokenCount = 15
             val expiredTokenCount = 5
+            val currentTime = LocalDateTime.now()
 
             val users = mutableListOf<User>()
             for (i in 1..validTokenCount + expiredTokenCount) {
@@ -75,9 +84,9 @@ class TokenDeactivationJobTest(
             savedUsers.forEachIndexed { index, user ->
                 val expirationTime =
                     if (index < validTokenCount) {
-                        LocalDateTime.now().plusDays(1)
+                        currentTime.plusDays(1)
                     } else {
-                        LocalDateTime.now().minusDays(1)
+                        currentTime.minusDays(1)
                     }
 
                 tokens.add(
@@ -89,15 +98,16 @@ class TokenDeactivationJobTest(
                 )
             }
 
-            val savedTokens = reservationTokenJpaRepository.saveAll(tokens)
+            val expiredTokens = activeQueueRedisRepository.active(tokens.filter { it.expiredAt < currentTime }, currentTime.minusDays(1))
+            val activeTokens = activeQueueRedisRepository.active(tokens.filter { it.expiredAt > currentTime }, currentTime)
 
             `when`("토큰 비활성화 작업이 실행되면") {
-                tokenDeactivationJob.deactivateTokens(LocalDateTime.now())
+                tokenDeactivationJob.deactivateTokens(currentTime.minusMinutes(30))
 
                 then("5개의 만료된 토큰은 delete된다.") {
-                    val allTokens = reservationTokenJpaRepository.findAll()
+                    val activateTokenCount = activeQueueRedisRepository.getTotalCount()
 
-                    allTokens.size shouldBe validTokenCount
+                    activateTokenCount shouldBe validTokenCount
                 }
             }
         }

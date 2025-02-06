@@ -13,6 +13,8 @@ interface ReservationTokenRepository {
 
     fun getExpiredToken(currentTime: LocalDateTime): List<ReservationToken>
 
+    fun removeExpiredActiveTokens(currentTime: LocalDateTime): Int
+
     fun deleteTokens(tokens: List<ReservationToken>)
 
     fun deleteToken(tokens: ReservationToken)
