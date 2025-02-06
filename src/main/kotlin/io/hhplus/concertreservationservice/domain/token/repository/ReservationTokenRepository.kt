@@ -21,13 +21,10 @@ interface ReservationTokenRepository {
 
     fun getActiveTokenCount(status: TokenStatus): Int
 
-    fun getWaitingTokensForActivation(
-        status: TokenStatus,
-        pageable: Pageable,
-    ): List<ReservationToken>
+    fun getWaitingTokensForActivation(pageable: Pageable): List<ReservationToken>
 
-    fun updateTokenStatus(
-        ids: List<Long>,
-        newStatus: TokenStatus,
+    fun updateToActiveStatus(
+        tokens: List<ReservationToken>,
+        currentTime: LocalDateTime,
     ): Int
 }
