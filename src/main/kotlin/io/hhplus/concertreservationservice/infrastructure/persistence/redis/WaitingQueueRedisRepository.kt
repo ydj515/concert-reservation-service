@@ -45,6 +45,11 @@ class WaitingQueueRedisRepository(
         } ?: emptyList()
     }
 
+    // 토큰 상태(rank, isExist..) 체크
+    fun findRank(command: TokenStatusCommand): Long? {
+        return redisTemplate.opsForZSet().rank(CONCERT_WAITING_QUEUE, command.token)
+    }
+
     // 전체 삭제
     fun deleteAll() {
         redisTemplate.delete(CONCERT_WAITING_QUEUE)

@@ -4,6 +4,8 @@ import io.hhplus.concertreservationservice.application.job.ReservationExpireJob
 import io.hhplus.concertreservationservice.application.job.TokenActivationJob
 import io.hhplus.concertreservationservice.application.job.TokenDeactivationJob
 import io.hhplus.concertreservationservice.infrastructure.persistence.jpa.ReservationTokenJpaRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.ActiveQueueRedisRepository
+import io.hhplus.concertreservationservice.infrastructure.persistence.redis.WaitingQueueRedisRepository
 import io.hhplus.concertreservationservice.presentation.constants.HeaderConstants.RESERVATION_QUEUE_TOKEN
 import io.hhplus.concertreservationservice.presentation.controller.token.request.ReservationTokenCreateRequest
 import io.kotest.core.spec.style.StringSpec
@@ -25,6 +27,8 @@ import org.springframework.test.context.ActiveProfiles
 class TokenControllerIntegrationTest(
     @LocalServerPort val port: Int,
     private val tokenJpaRepository: ReservationTokenJpaRepository,
+    private val waitingQueueRedisRepository: WaitingQueueRedisRepository,
+    private val activeQueueRedisRepository: ActiveQueueRedisRepository,
 ) : StringSpec({
 
         val reservationExpireJob = mockk<ReservationExpireJob>()
@@ -38,6 +42,8 @@ class TokenControllerIntegrationTest(
         }
         afterTest {
             tokenJpaRepository.deleteAllInBatch()
+            waitingQueueRedisRepository.deleteAll()
+            activeQueueRedisRepository.deleteAll()
         }
 
         "유효한 사용자 id로 토큰발급을 요청하면 토큰을 발급한다." {
@@ -85,7 +91,8 @@ class TokenControllerIntegrationTest(
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("success", equalTo(true))
-                .body("data.userId", equalTo(userId.toInt()))
+                .body("data.token", equalTo(token))
+                .body("data.position", notNullValue())
         }
 
         "잘못된 토큰을 가지고 polling 요청을 하면 401 에러를 받는다." {
