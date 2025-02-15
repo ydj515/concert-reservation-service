@@ -25,6 +25,6 @@ class FilterConfigTest(
 
             // 필터 제외 경로 확인
             val excludePaths = filterBean.initParameters["excludePaths"]
-            excludePaths shouldBe "/reservation-token"
+            excludePaths shouldBe "/reservation-token, /api/pay/send"
         }
     })

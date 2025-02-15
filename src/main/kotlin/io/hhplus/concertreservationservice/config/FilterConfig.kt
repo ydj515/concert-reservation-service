@@ -14,7 +14,7 @@ class FilterConfig {
         val registrationBean = FilterRegistrationBean(jwtAuthenticationFilter)
         registrationBean.addUrlPatterns("/api/*")
         registrationBean.addUrlPatterns("/reservation-token/status")
-        registrationBean.addInitParameter("excludePaths", "/reservation-token")
+        registrationBean.addInitParameter("excludePaths", "/reservation-token, /api/pay/send")
         return registrationBean
     }
 }
