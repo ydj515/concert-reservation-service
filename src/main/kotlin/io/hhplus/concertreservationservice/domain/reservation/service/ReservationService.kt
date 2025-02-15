@@ -17,12 +17,14 @@ import io.hhplus.concertreservationservice.domain.reservation.extension.toCreate
 import io.hhplus.concertreservationservice.domain.reservation.repository.SeatReservationRepository
 import io.hhplus.concertreservationservice.infrastructure.lock.DistributedLockWithTransactional
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ReservationService(
     private val reservationRepository: SeatReservationRepository,
     private val concertRepository: ConcertRepository,
 ) {
+    @Transactional
     fun validateReservation(command: ValidReservationCommand): SeatReservation {
         val reservation =
             reservationRepository.findReservationWithLock(command.reservationId) ?: throw ReservationNotFoundException(
