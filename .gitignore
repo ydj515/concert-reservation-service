@@ -1,6 +1,7 @@
 ### config file ###
 application.yml
 jwt.yml
+feign.yml
 .env
 
 ### database data ###
