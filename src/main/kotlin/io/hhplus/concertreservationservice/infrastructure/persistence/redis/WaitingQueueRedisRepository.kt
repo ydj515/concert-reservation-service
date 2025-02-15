@@ -27,7 +27,7 @@ class WaitingQueueRedisRepository(
         userId: Long,
         expiredAt: Double,
     ): Boolean {
-        return redisTemplate.opsForZSet().add(CONCERT_WAITING_QUEUE, token, expiredAt) ?: false
+        return redisTemplate.opsForZSet().add(CONCERT_WAITING_QUEUE, "$token:$userId", expiredAt) ?: false
     }
 
     // 활성화할 토큰 get
@@ -40,7 +40,7 @@ class WaitingQueueRedisRepository(
                 expiredAt = doubleToLocalDateTime(it.score!!),
                 status = TokenStatus.WAITING,
                 token = tokenParts[0],
-                userId = 0L,
+                userId = tokenParts[1].toLong(),
             )
         } ?: emptyList()
     }
