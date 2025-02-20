@@ -1,7 +1,8 @@
-package io.hhplus.concertreservationservice.application.facade.payment.event
+package io.hhplus.concertreservationservice.application.listener.payment
 
 import io.hhplus.concertreservationservice.application.client.ExternalPayClient
 import io.hhplus.concertreservationservice.application.client.ExternalPayCommand
+import io.hhplus.concertreservationservice.domain.payment.event.ExternalPayEvent
 import org.springframework.stereotype.Component
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener

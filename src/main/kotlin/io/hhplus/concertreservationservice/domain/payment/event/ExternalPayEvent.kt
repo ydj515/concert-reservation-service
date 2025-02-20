@@ -1,4 +1,4 @@
-package io.hhplus.concertreservationservice.application.facade.payment.event
+package io.hhplus.concertreservationservice.domain.payment.event
 
 data class ExternalPayEvent(
     val userName: String,
