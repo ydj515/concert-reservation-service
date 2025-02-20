@@ -1,5 +1,6 @@
 package io.hhplus.concertreservationservice.config
 
+import io.hhplus.concertreservationservice.application.job.PaymentRepublishJob
 import io.hhplus.concertreservationservice.application.job.ReservationExpireJob
 import io.hhplus.concertreservationservice.application.job.TokenActivationJob
 import io.hhplus.concertreservationservice.application.job.TokenDeactivationJob
@@ -81,6 +82,29 @@ class QuartzConfig {
             .withSchedule(
                 SimpleScheduleBuilder.simpleSchedule()
                     .withIntervalInSeconds(5) // 5초마다 실행
+                    .repeatForever(),
+            )
+            .build()
+    }
+
+    // PaymentRepublishJob 설정
+    @Bean
+    fun paymentRepublishJobDetail(): JobDetail {
+        return JobBuilder.newJob(PaymentRepublishJob::class.java)
+            .withIdentity("PaymentRepublishJob", "PaymentRepublishGroup")
+            .withDescription("republish PaymentOutbox periodically")
+            .storeDurably(true)
+            .build()
+    }
+
+    @Bean
+    fun paymentRepublishTrigger(): Trigger {
+        return TriggerBuilder.newTrigger()
+            .forJob(reservationExpireJobDetail())
+            .withIdentity("PaymentRepublishTrigger", "PaymentRepublishGroup")
+            .withSchedule(
+                SimpleScheduleBuilder.simpleSchedule()
+                    .withIntervalInMinutes(5) // 5분마다 실행
                     .repeatForever(),
             )
             .build()
