@@ -10,6 +10,11 @@ spring:
   config:
     activate:
       on-profile: local
+  kafka:
+    bootstrap-servers: ${KAFKA_1_HOST:127.0.0.1}:${KAFKA_1_PORT:9092}, ${KAFKA_2_HOST:127.0.0.1}:${KAFKA_2_PORT:9093}, ${KAFKA_3_HOST:127.0.0.1}:${KAFKA_3_PORT:9094}
+    consumer:
+      group-id-payment: payment-group # 여기에 컨슈머 그룹을 추가하면서 컨슈머 컨피그에서 사용
+      auto-offset-reset: earliest
   quartz:
     job-store-type: jdbc
     jdbc:
