@@ -53,7 +53,7 @@ class ReservationExpireJobTest(
             for (i in 1..100) {
                 users.add(User(id = i.toLong(), name = "test$i"))
             }
-            userJpaRepository.saveAll(users)
+            val savedUser = userJpaRepository.saveAll(users)
 
             val place1 = Place(name = "상암월드컵경기장", availableSeatCount = 1000)
             val place2 = Place(name = "세종문화회관", availableSeatCount = 3000)
@@ -93,7 +93,7 @@ class ReservationExpireJobTest(
             val expiredReservation =
                 SeatReservation(
                     status = ReservationStatus.RESERVED,
-                    user = users[0],
+                    user = savedUser[0],
                     seat = seats1[0],
                     paymentId = null,
                     reservationExpiredAt = LocalDateTime.now().minusDays(1),
@@ -101,7 +101,7 @@ class ReservationExpireJobTest(
             val activeReservation =
                 SeatReservation(
                     status = ReservationStatus.RESERVED,
-                    user = users[1],
+                    user = savedUser[1],
                     seat = seats1[1],
                     paymentId = null,
                     reservationExpiredAt = LocalDateTime.now().plusDays(1),

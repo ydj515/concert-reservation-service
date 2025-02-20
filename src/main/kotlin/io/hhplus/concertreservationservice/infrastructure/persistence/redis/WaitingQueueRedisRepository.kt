@@ -47,7 +47,15 @@ class WaitingQueueRedisRepository(
 
     // 토큰 상태(rank, isExist..) 체크
     fun findRank(command: TokenStatusCommand): Long? {
-        return redisTemplate.opsForZSet().rank(CONCERT_WAITING_QUEUE, command.token)
+        // return redisTemplate.opsForZSet().rank(CONCERT_WAITING_QUEUE, command.token)
+        val redisOps = redisTemplate.opsForZSet()
+
+        // ZSet의 모든 값을 가져옴
+        val members = redisOps.range(CONCERT_WAITING_QUEUE, 0, -1) ?: return null
+
+        // command.token으로 시작하는 첫 번째 값 찾기
+        val target = members.firstOrNull { it.toString().startsWith(command.token) } ?: return null
+        return redisOps.rank(CONCERT_WAITING_QUEUE, target)
     }
 
     // 전체 삭제
