@@ -3,7 +3,6 @@ package io.hhplus.concertreservationservice.application.facade.payment.processor
 import io.hhplus.concertreservationservice.application.facade.payment.PaymentContext
 import io.hhplus.concertreservationservice.application.facade.payment.response.ProcessPaymentResult
 import io.hhplus.concertreservationservice.domain.balance.Money
-import io.hhplus.concertreservationservice.domain.payment.event.ExternalPayEvent
 import io.hhplus.concertreservationservice.domain.payment.event.PaymentCompletedEvent
 import io.hhplus.concertreservationservice.domain.payment.event.publisher.PaymentEventPublisher
 import io.hhplus.concertreservationservice.domain.payment.service.PaymentService
@@ -47,12 +46,18 @@ class PaymentProcessor(
         // 토큰 삭제
         tokenService.deleteToken(criteria.token)
 
-        // 결제되었다는 이벤트 발행.
-        eventPublisher.publishCompletedEvent(PaymentCompletedEvent(paymentInfo.paymentId, paymentInfo.status))
+        // 결제되었다는 이벤트 발행
+        eventPublisher.publishCompletedEvent(
+            PaymentCompletedEvent(
+                paymentInfo.paymentId,
+                paymentInfo.status,
+                user.name,
+                criteria.reservationId,
+                criteria.amount,
+            ),
+        )
 
         // 외부 결제 완료되었다는 api 호출 event
-        eventPublisher.publishExternalPayEvent(ExternalPayEvent(user.name, criteria.reservationId, criteria.amount))
-
         return paymentInfo.toProcessPaymentResult()
     }
 }
