@@ -19,7 +19,6 @@ class PaymentCompletedConsumer(
 
     @KafkaListener(topics = [PAYMENT_COMPLETED_TOPIC], groupId = PAYMENT_COMPLETED_CONSUMER_GROUP)
     fun consume(record: ConsumerRecord<String, String>) {
-        // TODO : if record에서 status가 completed가 아닌 것만 처리하게 수정.
         val consumedRecord = PayEventParser.parsePaymentCompletedEvent(record.value())
 
         paymentCompletedEventService.consumeRecord(consumedRecord)
