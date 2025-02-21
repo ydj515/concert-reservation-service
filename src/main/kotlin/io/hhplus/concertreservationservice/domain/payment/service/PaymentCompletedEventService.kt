@@ -17,7 +17,7 @@ class PaymentCompletedEventService(
     }
 
     fun sendKafka(event: PaymentCompletedEvent) {
-        // 여기서 파티션을 어떻게 나눠야할까?
+        // TODO: 여기서 파티션을 어떻게 나눠야할까?
 //        kafkaTemplate.send(PAYMENT_COMPLETED_TOPIC, event.paymentId.toString(), event.toString())
         kafkaTemplate.send(PAYMENT_COMPLETED_TOPIC, event.toString())
     }
