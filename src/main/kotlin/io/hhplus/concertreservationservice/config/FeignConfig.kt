@@ -5,5 +5,5 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@EnableFeignClients(basePackageClasses = arrayOf(ExternalPayClient::class))
+@EnableFeignClients(basePackageClasses = [ExternalPayClient::class])
 class FeignConfig

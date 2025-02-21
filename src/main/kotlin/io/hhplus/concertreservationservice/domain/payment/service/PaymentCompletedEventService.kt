@@ -1,5 +1,8 @@
 package io.hhplus.concertreservationservice.domain.payment.service
 
+import io.hhplus.concertreservationservice.application.client.ExternalPayClient
+import io.hhplus.concertreservationservice.application.client.ExternalPayCommand
+import io.hhplus.concertreservationservice.application.client.ExternalPayResult
 import io.hhplus.concertreservationservice.common.Topic.PAYMENT_COMPLETED_TOPIC
 import io.hhplus.concertreservationservice.domain.payment.event.PaymentCompletedEvent
 import io.hhplus.concertreservationservice.domain.payment.outbox.PaymentCompletedOutboxEvent
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service
 class PaymentCompletedEventService(
     private val paymentCompletedOutBoxEventRepository: PaymentCompletedOutboxEventRepository,
     private val kafkaTemplate: KafkaTemplate<String, String>,
+    private val externalPayClient: ExternalPayClient,
 ) {
     fun saveOutbox(event: PaymentCompletedOutboxEvent): PaymentCompletedOutboxEvent {
         return paymentCompletedOutBoxEventRepository.save(event)
@@ -22,7 +26,7 @@ class PaymentCompletedEventService(
         kafkaTemplate.send(PAYMENT_COMPLETED_TOPIC, event.toString())
     }
 
-    fun consumeRecord(event: PaymentCompletedEvent): PaymentCompletedOutboxEvent {
+    fun markOutboxCompleted(event: PaymentCompletedEvent): PaymentCompletedOutboxEvent {
         val outboxEvent =
             paymentCompletedOutBoxEventRepository.getOutboxEvent(event.paymentId)
                 ?: throw IllegalArgumentException("outboxEvent is not available")
@@ -30,5 +34,15 @@ class PaymentCompletedEventService(
         outboxEvent.complete()
 
         return paymentCompletedOutBoxEventRepository.save(outboxEvent)
+    }
+
+    fun sendPaymentInfo(event: PaymentCompletedEvent): ExternalPayResult {
+        val externalCommand =
+            ExternalPayCommand(
+                event.username,
+                event.reservationId,
+                event.amount,
+            )
+        return externalPayClient.sendPayResult(externalCommand)
     }
 }
