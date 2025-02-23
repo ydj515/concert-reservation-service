@@ -10,7 +10,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 @Component
-class PaymentCompletedConsumer(
+class PaymentOutboxConsumer(
     private val paymentCompletedEventService: PaymentCompletedEventService,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -19,7 +19,7 @@ class PaymentCompletedConsumer(
     fun consume(record: ConsumerRecord<String, String>) {
         val consumedRecord = PayEventParser.parsePaymentCompletedEvent(record.value())
 
-        paymentCompletedEventService.sendPaymentInfo(consumedRecord)
+        // 아웃박스 상태 업데이트 (발행한 이벤트가 처리되었음을 마킹)
         paymentCompletedEventService.markOutboxCompleted(consumedRecord)
 
         logger.info("Consumed payment record ${record.value()}")
