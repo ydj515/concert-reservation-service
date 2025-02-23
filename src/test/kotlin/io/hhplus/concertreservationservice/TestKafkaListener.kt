@@ -2,7 +2,7 @@ package io.hhplus.concertreservationservice
 
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Collections
 
 @Component
 class TestKafkaListener {

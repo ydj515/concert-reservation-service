@@ -100,7 +100,7 @@ class QuartzConfig {
     @Bean
     fun paymentRepublishTrigger(): Trigger {
         return TriggerBuilder.newTrigger()
-            .forJob(reservationExpireJobDetail())
+            .forJob(paymentRepublishJobDetail())
             .withIdentity("PaymentRepublishTrigger", "PaymentRepublishGroup")
             .withSchedule(
                 SimpleScheduleBuilder.simpleSchedule()
