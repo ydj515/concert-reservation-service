@@ -19,7 +19,7 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("id")
     val id: Long = 0L,
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @Comment("사용자 이름")
     val name: String,
     @Embedded
