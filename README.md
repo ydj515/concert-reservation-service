@@ -34,6 +34,12 @@
 pip install -r requirements.txt
 python dummy_data_maker.py
 ```
+
+## test
+```shell
+K6_WEB_DASHBOARD=true k6 run --tag test=my-load-test --out influxdb=http://localhost:8086/k6 ./k6/load_test.js
+```
+
 ## Requirements
 
 - 아래 5가지 API 를 구현합니다.
