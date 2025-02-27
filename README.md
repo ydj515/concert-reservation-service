@@ -28,6 +28,12 @@
     cp src/main/resources/application-sample.yml src/main/resources/application.yml
     ```
 
+## create dummy data
+
+```shell
+pip install -r requirements.txt
+python dummy_data_maker.py
+```
 ## Requirements
 
 - 아래 5가지 API 를 구현합니다.
